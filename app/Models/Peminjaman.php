@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Peminjaman extends Model
+{
+    use HasFactory;
+    protected $table="peminjamans";
+    protected $fillable = [
+        'id',
+        'jumlah',
+        'tanggal_pinjam',
+        'tanggal_kembali',
+        'nama_peminjam',
+        'status',
+        'id_barang',
+    ];
+    public $timestamps = true;
+
+    public function pusat(){
+        return $this->belongsTo(Datapusat::class, 'id_barang');
+    }
+}
