@@ -138,8 +138,8 @@
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">No</th>
-                                                                <th scope="col">Kode Barang</th>
-                                                                <th scope="col">Jumlah Barang</th>
+                                                                <th scope="col">Kode Peminjaman</th>
+                                                                <th scope="col">Jumlah Tool</th>
                                                                 <th scope="col">Tanggal Pengembalian Barang</th>
                                                                 <th scope="col">Nama Peminjam</th>
                                                                 <th scope="col">Status</th>
@@ -151,10 +151,10 @@
                                                             @foreach ($kembali as $data)
                                                             <tr>
                                                                 <th scope="row">{{ $no++ }}</th>
-                                                                <td>{{ $data->kode_barang }}</td>
-                                                                <td>{{ $data->jumlah }}</td>
+                                                                <td>{{ $data->kode_pinjam }}</td>
+                                                                <td>{{ $data->detail->sum('jumlah') }}</td>
                                                                 <td>{{ $data->tanggal_kembali }}</td>
-                                                                <td>{{ $data->nama_peminjam }}</td>
+                                                                <td>{{ $data->pinjam->nama_anggota_tim }}</td>
                                                                 <td>{{ $data->status }}</td>
                                                                 <td>
                                                                     <form action="{{ route('pengembalian.destroy', $data->id) }}" method="POST">

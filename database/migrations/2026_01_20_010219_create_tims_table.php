@@ -13,15 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('barangkeluars', function (Blueprint $table) {
+        Schema::create('tims', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_barang');
-            $table->integer('jumlah');
-            $table->date('tanggal_keluar');
-            $table->string('keterangan');
-            $table->unsignedBigInteger('id_barang');
+            $table->string('kode_tim')->unique();
+            $table->string('nama_anggota_tim');
+            $table->string('lokasi_tim');
+            $table->string('pemimpin_tim');
+            $table->string('kontak_tim');
             $table->timestamps();
-            $table->foreign('id_barang')->references('id')->on('datapusats')->ondelete('cascade');
         });
     }
 
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('barangkeluars');
+        Schema::dropIfExists('tims');
     }
 };

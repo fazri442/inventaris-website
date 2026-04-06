@@ -146,13 +146,17 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-12 col-form-label">Pilih Barang</label>
                                                     <div class="col-sm-12">
-                                                        <select name="id_barang" class="form-control">
+                                                        <select name="id_tool" class="form-control">
                                                             <option>-- Pilih Barang --</option>
                                                             @foreach ($datapusat as $data)
-                                                                <option value="{{ $data->id }}" @if($barangmasuk->pusat->id == $data->id) selected @endif > {{ $data->nama }}--{{ $data->id }}</option>
+                                                                <option value="{{ $data->id }}" @if($barangmasuk->pusat->id == $data->id) selected @endif > {{ $data->nama_tool }} </option>
                                                             @endforeach
                                                         </select>
                                                     </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Nama Tim</label>
+                                                    <input type="text" class="form-control" value="{{ $barangmasuk->nama_tim }}" name="nama_tim">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Jumlah</label>
@@ -165,6 +169,10 @@
                                                 <div class="form-group">
                                                     <label>Keterangan Barang Masuk</label>
                                                     <input type="text" class="form-control" value="{{ $barangmasuk->keterangan }}" name="keterangan">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Lokasi Barang Masuk</label>
+                                                    <input type="text" class="form-control" value="{{ $barangmasuk->lokasi }}" name="lokasi">
                                                 </div>
                                                 <button type="submit" class="btn btn-primary">Rubah</button>
                                             </form>

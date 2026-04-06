@@ -21,8 +21,8 @@ class DataPusatController extends Controller
 
     public function index()
     {
-            $datapusat = Datapusat::all();
-            return view('datapusat.index', compact('datapusat'));
+        $datapusat = Datapusat::all();
+        return view('datapusat.index', compact('datapusat'));
     }
 
     public function export()
@@ -52,25 +52,26 @@ class DataPusatController extends Controller
     public function store(Request $request)
     {
         $notif = $request->validate([
-            'nama' => 'required',
-            'merk' => 'required',
+            'nama_tool' => 'required',
             'foto' => 'required',
-            'stok' => 'required'
+            'stok' => 'required',
+            'deskripsi' => 'required',
+            'lokasi' => 'required'
         ],
         [
-            'nama.required' => 'Nama Barang Belum diisi',
-            'merk.required' => 'Merk Belum dimasukan',
+            'nama_tool.required' => 'Nama Tool Belum diisi',
             'foto.required' => 'Foto Belum Dipilih',
-            'stok.required' => 'Stok Belum dimasukan'
+            'stok.required' => 'Stok Belum dimasukan',
+            'deskripsi.required' => 'Deskripsi Belum dimasukan',
+            'lokasi.required' => 'Lokasi Belum dimasukan',
         ]);
         $data = new Datapusat;
         $lastRecord = DataPusat::latest('id')->first();
         $lastId = $lastRecord ? $lastRecord->id : 0;
-        $kodeBarang = 'KTG-' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
+        $kodeTool = 'TOOL-' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
 
-        $data->kode_barang = $kodeBarang;
-        $data->nama = $request->nama;
-        $data->merk = $request->merk;
+        $data->kode_tool = $kodeTool;
+        $data->nama_tool = $request->nama_tool;
         if($request->hasFile('foto')){
             $img = $request->file('foto');
             $name = rand(1000,9999).$img->getClientOriginalname();
@@ -78,6 +79,8 @@ class DataPusatController extends Controller
             $data->foto = $name;
         }
         $data->stok = $request->stok;
+        $data->deskripsi = $request->deskripsi;
+        $data->lokasi = $request->lokasi;
         $data->save();
 
         return redirect()->route('datapusat.index')->with('success', 'Data berhasil Ditambahkan');
@@ -116,23 +119,26 @@ class DataPusatController extends Controller
     public function update(Request $request, $id)
     {
         $notif = $request->validate([
-            'nama' => 'required',
-            'merk' => 'required',
+            'nama_tool' => 'required',
             'foto' => 'required',
-            'stok' => 'required'
+            'stok' => 'required',
+            'deskripsi' => 'required',
+            'lokasi' => 'required'
         ],
         [
-            'nama.required' => 'Nama Barang Belum Diisi Kembali',
-            'merk.required' => 'Merk Belum Dimasukan Kembali',
+            'nama_tool.required' => 'Nama Tool Belum Diisi Kembali',
             'foto.required' => 'Foto Belum Di pilih Kembali',
-            'stok.required' => 'Stok Belum Dimasukan Kembali'
+            'stok.required' => 'Stok Belum Dimasukan Kembali',
+            'deskripsi.required' => 'Deskripsi Belum Dimasukan Kembali',
+            'lokasi.required' => 'Lokasi Belum Dimasukan Kembali',
         ]);
         $data = Datapusat::findOrFail($id);
-        $data->nama = $request->nama;
-        $data->merk = $request->merk;
+        $data->nama_tool = $request->nama_tool;
         $data->foto = $request->foto;
         $data->stok = $request->stok;
-            
+        $data->deskripsi = $request->deskripsi;
+        $data->lokasi = $request->lokasi;
+
             if($request->hasFile('foto')){
             $data->deleteImage();
             $img = $request->file('foto');

@@ -144,12 +144,12 @@
                                                     </div>
                                                 @endif
                                                 <div class="form-group">
-                                                    <label>Nama Barang</label>
-                                                    <input type="text" class="form-control" value="{{ $datapusat->nama }}" name="nama">
+                                                    <label>Nama Tool</label>
+                                                    <input type="text" class="form-control" value="{{ $datapusat->nama_tool }}" name="nama_tool">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label>Merk</label>
-                                                    <input type="text" class="form-control" value="{{ $datapusat->merk }}" name="merk">
+                                                    <label>Deskripsi</label>
+                                                    <input type="text" class="form-control" value="{{ $datapusat->deskripsi }}" name="deskripsi">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Foto</label>
@@ -159,6 +159,10 @@
                                                 <div class="form-group">
                                                     <label>Stok</label>
                                                     <input type="number" class="form-control" value="{{ $datapusat->stok }}" name="stok">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Lokasi</label>
+                                                    <input type="text" class="form-control" value="{{ $datapusat->lokasi }}" name="lokasi">
                                                 </div>
                                                 <button type="submit" class="btn btn-primary">Rubah</button>
                                             </form>

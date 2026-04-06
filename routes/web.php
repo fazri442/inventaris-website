@@ -8,6 +8,7 @@ use App\Http\Controllers\BarangMasukController;
 use App\Http\Controllers\BarangkeluarController;
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\PenggunaController;
+use App\Http\Controllers\TimController;
 use App\Http\Middleware\isAdmin;
 
 
@@ -47,5 +48,6 @@ Route::get('barangkeluar-export', [BarangkeluarController::class, 'export'])->na
 route::resource('pengembalian', PengembalianController::class);
 Route::get('pengembalian-export', [PengembalianController::class, 'export'])->name('pengembalian.export');
 
+route::resource('tim', TimController::class);
 route::resource('pengguna', PenggunaController::class);
 });

@@ -36,6 +36,12 @@
         <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
       <!-- Style.css -->
       <link rel="stylesheet" type="text/css" href="{{ asset ('front/css/style.css') }}">
+
+      <!-- Di dalam <head> atau sebelum </body> -->
+      <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+      <!-- Kalau pakai Bootstrap JS juga perlu (untuk beberapa fitur) -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </head>
 
   <body>
@@ -131,49 +137,167 @@
                       </div>
 
                                         <div class="card-body">
-                                            <form action="{{ route('peminjam.store') }}" method="post" enctype="multipart/form-data">
+                                            <form action="{{ route('peminjam.store') }}" method="POST">
                                                 @csrf
-                                                @if ($errors->any())
+                                                @if (session('error'))
                                                     <div class="alert alert-danger">
-                                                        <ul>
-                                                            @foreach ($errors->all() as $error)
-                                                                <li>{{ $error }}</li>
-                                                            @endforeach
-                                                        </ul>
+                                                        {{ session('error') }}
                                                     </div>
                                                 @endif
-                                                <div class="form-group">
-                                                    <label class="col-sm-12 col-form-label">Nama Barang</label>
-                                                    <div class="col-sm-12">
-                                                        <select name="id_barang" class="form-control">
-                                                            <option>-- Pilih Barang --</option>
-                                                            @foreach ($datapusat as $data)
-                                                                <option value="{{ $data->id }}">{{ $data->nama }} ({{ $data->stok }})</option>
-                                                            @endforeach
-                                                        </select>
+
+                                                <!-- Informasi Umum Peminjaman -->
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Nama Peminjam</label>
+                                                            <select name="id_tim" class="form-control @error('id_tim') is-invalid @enderror" required>
+                                                                <option value="">-- Pilih Nama Peminjam --</option>
+                                                                @foreach ($tim as $t)
+                                                                    <option value="{{ $t->id }}" {{ old('id_tim') == $t->id ? 'selected' : '' }}>
+                                                                        {{ $t->nama_anggota_tim }} ({{ $t->lokasi_tim }})
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                            @error('id_tim')
+                                                                <span class="invalid-feedback">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Tanggal Pinjam</label>
+                                                            <input type="date" name="tanggal_pinjam" class="form-control @error('tanggal_pinjam') is-invalid @enderror"
+                                                                value="{{ old('tanggal_pinjam', now()->format('Y-m-d')) }}" required>
+                                                            @error('tanggal_pinjam')
+                                                                <span class="invalid-feedback">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label>Tanggal Kembali</label>
+                                                            <input type="date" name="tanggal_kembali" class="form-control @error('tanggal_kembali') is-invalid @enderror"
+                                                                value="{{ old('tanggal_kembali') }}" required>
+                                                            @error('tanggal_kembali')
+                                                                <span class="invalid-feedback">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label>Jumlah Barang</label>
-                                                    <input type="text" class="form-control" name="jumlah">
+
+                                                <!-- Daftar Barang (Dynamic) -->
+                                                <div class="form-group mt-4">
+                                                    <label>Daftar Tool yang Dipinjam</label>
+                                                    <button type="button" class="btn btn-sm btn-success" id="addRow">
+                                                        <i class="ti ti-plus"></i> Tambah Tool
+                                                    </button>
+
+                                                    <div class="table-responsive mt-2">
+                                                        <table class="table table-bordered" id="toolTable">
+                                                            <thead class="bg-light">
+                                                                <tr>
+                                                                    <th width="50%">Nama Tool</th>
+                                                                    <th width="20%">Jumlah</th>
+                                                                    <th width="20%">Stok Tersedia</th>
+                                                                    <th width="10%"></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <!-- Baris pertama default -->
+                                                                <tr>
+                                                                    <td>
+                                                                        <select name="tools[0][id_tool]" class="form-control tool-select" required>
+                                                                            <option value="">-- Pilih Tool --</option>
+                                                                            @foreach ($datapusat as $data)
+                                                                                <option value="{{ $data->id }}" data-stok="{{ $data->stok }}">
+                                                                                    {{ $data->nama_tool }} (Stok: {{ $data->stok }})
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="number" name="tools[0][jumlah]" class="form-control jumlah-input" min="1" required>
+                                                                    </td>
+                                                                    <td class="stok-display text-center">-</td>
+                                                                    <td></td> <!-- tombol hapus kosong di baris pertama -->
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    @error('tools.*.id_tool')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                    @error('tools.*.jumlah')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
-                                                <div class="form-group">
-                                                    <label>Tanggal Pinjaman</label>
-                                                    <input type="date" class="form-control" name="tanggal_pinjam">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Tanggal Kembali</label>
-                                                    <input type="date" class="form-control" name="tanggal_kembali">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Nama Peminjam</label>
-                                                    <input type="text" class="form-control" name="nama_peminjam">
-                                                </div>
-                                                <button type="submit" class="btn btn-primary">Kirim</button>
+
+                                                <button type="submit" class="btn btn-primary mt-3">
+                                                    <i class="ti ti-save"></i> Simpan Peminjaman
+                                                </button>
                                             </form>
                                         </div>
 
+                                        <!-- JavaScript untuk dynamic row -->
+                                    
+                                            <script>    
+                                                let rowIndex = 1;
 
+                                                $('#addRow').click(function() {
+                                                    console.log("Tombol Tambah Tool diklik!");
+                                                    let newRow = `
+                                                        <tr>
+                                                            <td>
+                                                                <select name="tools[${rowIndex}][id_tool]" class="form-control tool-select" required>
+                                                                    <option value="">-- Pilih Tool --</option>
+                                                                    @foreach ($datapusat as $data)
+                                                                        <option value="{{ $data->id }}" data-stok="{{ $data->stok }}">
+                                                                            {{ $data->nama_tool }} (Stok: {{ $data->stok }})
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" name="tools[${rowIndex}][jumlah]" class="form-control jumlah-input" min="1" required>
+                                                            </td>
+                                                            <td class="stok-display text-center">-</td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-sm btn-danger removeRow">
+                                                                    <i class="fas fa-trash"></i> Hapus
+                                                                </button>
+                                                            </td>
+                                                        </tr>`;
+
+                                                    $('#toolTable tbody').append(newRow);
+                                                    rowIndex++;
+                                                });
+
+                                                // Hapus baris
+                                                $(document).on('click', '.removeRow', function() {
+                                                    $(this).closest('tr').remove();
+                                                });
+
+                                                // Update tampilan stok saat pilih tool
+                                                $(document).on('change', '.tool-select', function() {
+                                                    let stok = $(this).find(':selected').data('stok') || 0;
+                                                    let tdStok = $(this).closest('tr').find('.stok-display');
+                                                    tdStok.text(stok);
+
+                                                    // Optional: validasi live (bisa ditambah nanti)
+                                                    let inputJumlah = $(this).closest('tr').find('.jumlah-input');
+                                                    inputJumlah.attr('max', stok);
+                                                    if (inputJumlah.val() > stok) {
+                                                        inputJumlah.val(stok);
+                                                    }
+                                                });
+
+                                                console.log("Script create.blade.php jalan setelah custom-dashboard dimatikan");
+                                            </script>
+                                        
+
+                                        
                                 </div>
                                 <div id="styleSelector"> </div>
                             </div>
@@ -229,7 +353,6 @@
     <!-- Warning Section Ends -->
     
     <!-- Required Jquery -->
-    <script type="text/javascript" src="{{ asset ('front/js/jquery/jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset ('front/js/jquery-ui/jquery-ui.min.js') }} "></script>
     <script type="text/javascript" src="{{ asset ('front/js/popper.js/popper.min.js') }}"></script>
     <script type="text/javascript" src="{{asset ('front/js/bootstrap/js/bootstrap.min.js') }} "></script>
@@ -256,7 +379,6 @@
     <script src="{{ asset('front/js/pcoded.min.js') }}"></script>
     <script src="{{ asset('front/js/vertical-layout.min.js') }} "></script>
     <!-- custom js -->
-    <script type="text/javascript" src="{{ asset ('front/pages/dashboard/custom-dashboard.js') }}"></script>
     <script type="text/javascript" src="{{ asset ('front/js/script.js') }} "></script>
 </body>
 

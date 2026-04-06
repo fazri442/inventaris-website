@@ -131,57 +131,119 @@
                       </div>
 
                                         <div class="card-body">
-                                            <form action="{{ route('peminjam.update', $peminjam->id) }}" method="post" enctype="multipart/form-data">
-                                                @csrf
-                                                @method('PUT')
-                                                @if ($errors->any())
-                                                    <div class="alert alert-danger">
-                                                        <ul>
-                                                            @foreach ($errors->all() as $error)
-                                                                <li>{{ $error }}</li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                @endif
-                                                <div class="form-group">
-                                                    <label class="col-sm-12 col-form-label">Nama Barang</label>
-                                                    <div class="col-sm-12">
-                                                        <select name="id_barang" class="form-control" value="{{ $peminjam->nama }}">
-                                                            <option>-- Pilih Barang --</option>
-                                                            @foreach ($datapusat as $data)
-                                                                <option value="{{ $data->kode_barang }}" {{ $data->id == $peminjam->pusat->id ? 'selected' : '' }}>{{ $data->nama }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Jumlah Barang</label>
-                                                    <input type="number" class="form-control" value="{{ $peminjam->jumlah }}" name="jumlah">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Tanggal Peminjaman</label>
-                                                    <input type="date" class="form-control" value="{{ $peminjam->tanggal_pinjam }}" name="tanggal_pinjam">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Tanggal Kembali</label>
-                                                    <input type="date" class="form-control" value="{{ $peminjam->tanggal_kembali }}" name="tanggal_kembali">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Nama Peminjam</label>
-                                                    <input type="text" class="form-control" value="{{ $peminjam->nama_peminjam }}" name="nama_peminjam">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-sm-12 col-form-label">Status</label>
-                                                    <div class="col-sm-12">
-                                                        <select name="status" class="form-control" id="" value="{{ $peminjam->status }}">
-                                                            <option value="Sedang Dipinjam">Sedang Dipinjam</option>
-                                                            <option value="Sudah Dikembalikan">Sudah Dikembalikan</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <button type="submit" class="btn btn-primary">Rubah</button>
-                                            </form>
-                                        </div>
+    <form action="{{ route('peminjam.update', $peminjaman->id) }}" method="POST">
+        @csrf
+        @method('PUT')
+
+        @if ($errors->any() || session('error'))
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                    @if (session('error'))
+                        <li>{{ session('error') }}</li>
+                    @endif
+                </ul>
+            </div>
+        @endif
+
+        <!-- Informasi Umum (sama seperti create) -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Nama Peminjam</label>
+                    <select name="id_tim" class="form-control" required>
+                        <option value="">-- Pilih --</option>
+                        @foreach ($tim as $t)
+                            <option value="{{ $t->id }}" {{ old('id_tim', $peminjaman->id_tim) == $t->id ? 'selected' : '' }}>
+                                {{ $t->nama_anggota_tim }} ({{ $t->lokasi_tim }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Tanggal Pinjam</label>
+                    <input type="date" name="tanggal_pinjam" class="form-control" value="{{ old('tanggal_pinjam', $peminjaman->tanggal_pinjam) }}" required>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Tanggal Kembali</label>
+                    <input type="date" name="tanggal_kembali" class="form-control" value="{{ old('tanggal_kembali', $peminjaman->tanggal_kembali) }}" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status -->
+        <div class="form-group">
+            <label>Status</label>
+            <select name="status" class="form-control">
+                <option value="Sedang Dipinjam" {{ old('status', $peminjaman->status) == 'Sedang Dipinjam' ? 'selected' : '' }}>Sedang Dipinjam</option>
+                <option value="Sudah Dikembalikan" {{ old('status', $peminjaman->status) == 'Sudah Dikembalikan' ? 'selected' : '' }}>Sudah Dikembalikan</option>
+            </select>
+        </div>
+
+        <!-- Daftar Barang (Dynamic, prefill existing) -->
+        <div class="form-group mt-4">
+            <label>Daftar Tool yang Dipinjam</label>
+            <button type="button" class="btn btn-sm btn-success" id="addRow">Tambah Tool</button>
+
+            <div class="table-responsive mt-2">
+                <table class="table table-bordered" id="toolTable">
+                    <thead>
+                        <tr>
+                            <th>Nama Tool</th>
+                            <th>Jumlah</th>
+                            <th>Stok Tersedia</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($existingDetails as $index => $detail)
+                        <tr>
+                            <td>
+                                <select name="tools[{{ $index }}][id_tool]" class="form-control tool-select" required>
+                                    <option value="">-- Pilih --</option>
+                                    @foreach ($datapusat as $data)
+                                        <option value="{{ $data->id }}" data-stok="{{ $data->stok }}" {{ $detail['id_tool'] == $data->id ? 'selected' : '' }}>
+                                            {{ $data->nama_tool }} (Stok: {{ $data->stok }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
+                                <input type="number" name="tools[{{ $index }}][jumlah]" class="form-control jumlah-input" value="{{ $detail['jumlah'] }}" min="1" required>
+                            </td>
+                            <td class="stok-display text-center">{{ $detail['stok'] }}</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-danger removeRow">Hapus</button>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Update Peminjaman</button>
+        <a href="{{ route('peminjam.index') }}" class="btn btn-secondary">Batal</a>
+    </form>
+</div>
+
+<!-- Script JS (salin dari create, tambah prefill stok saat load) -->
+<script>
+    let rowIndex = {{ count($existingDetails) }};
+
+    // ... script addRow, removeRow, change tool-select sama seperti create ...
+
+    // Saat load halaman, trigger change untuk tampilkan stok awal
+    $(document).ready(function() {
+        $('.tool-select').trigger('change');
+    });
+</script>
 
 
                                 </div>

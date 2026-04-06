@@ -25,8 +25,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
-    
     Route::resource('/tim', \App\Http\Controllers\Api\TimApiController::class)->except(['create', 'edit']);
+    
     Route::resource('/barangkeluar', \App\Http\Controllers\Api\BarangKeluarApiController::class)->except(['create', 'edit']);
     Route::resource('/datapusat', \App\Http\Controllers\Api\DataPusatApiController::class)->except(['create', 'edit']);
     Route::resource('/barangmasuk', \App\Http\Controllers\Api\BarangMasukApiController::class)->except(['create', 'edit']);

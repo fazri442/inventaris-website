@@ -15,11 +15,12 @@ return new class extends Migration
     {
         Schema::create('datapusats', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_barang');
-            $table->string('nama');
-            $table->string('merk');
+            $table->string('kode_tool')->unique();
+            $table->string('nama_tool');
             $table->string('foto');
-            $table->string('stok');
+            $table->integer('stok');
+            $table->string('deskripsi');
+            $table->string('lokasi');
             $table->timestamps();
         });
     }

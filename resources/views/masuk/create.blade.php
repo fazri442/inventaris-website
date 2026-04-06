@@ -145,10 +145,21 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-12 col-form-label">Pilih Barang</label>
                                                     <div class="col-sm-12">
-                                                        <select name="id_barang" class="form-control">
+                                                        <select name="id_tool" class="form-control">
                                                             <option>-- Pilih Barang --</option>
                                                             @foreach ($datapusat as $data)
-                                                                <option value="{{ $data->id }}">{{ $data->nama }}</option>
+                                                                <option value="{{ $data->id }}">{{ $data->nama_tool }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-12 col-form-label">Nama Tim</label>
+                                                    <div class="col-sm-12">
+                                                        <select name="nama_tim" class="form-control">
+                                                            <option>-- Nama Tim --</option>
+                                                            @foreach ($tim as $data)
+                                                                <option value="{{ $data->id }}">{{ $data->nama_anggota_tim }}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -164,6 +175,10 @@
                                                 <div class="form-group">
                                                     <label>Keterangan Barang Masuk</label>
                                                     <input type="text" class="form-control" name="keterangan">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Lokasi Barang</label>
+                                                    <input type="text" class="form-control" name="lokasi">
                                                 </div>
                                                 <button type="submit" class="btn btn-primary">Kirim</button>
                                             </form>

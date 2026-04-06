@@ -140,8 +140,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">No</th>
-                                                                <th scope="col">Kode Barang</th>
-                                                                <th scope="col">Kode Pinjaman</th>
+                                                                <th scope="col">Kode Peminjaman</th>
                                                                 <th scope="col">Jumlah Barang</th>
                                                                 <th scope="col">Tanggal Pinjam Barang</th>
                                                                 <th scope="col">Tanggal Pengembalian Barang</th>
@@ -155,12 +154,11 @@
                                                             @foreach ($pinjam as $data)
                                                                 <tr>
                                                                     <th scope="row">{{ $no++ }}</th>
-                                                                    <td>{{ $data->pusat->kode_barang }}</td>
-                                                                    <td>{{ $data->kode_barang }}</td>
+                                                                    <td>{{ $data->kode_pinjam }}</td>
                                                                     <td>{{ $data->jumlah }}</td>
                                                                     <td>{{ $data->tanggal_pinjam }}</td>
                                                                     <td>{{ $data->tanggal_kembali }}</td>
-                                                                    <td>{{ $data->nama_peminjam }}</td>
+                                                                    <td>{{ $data->pinjam->nama_anggota_tim }}</td>
                                                                     <td>{{ $data->status }}</td>
                                                                     <td>
                                                                         <form action="{{ route('peminjam.destroy', $data->id) }}" method="POST">

@@ -142,23 +142,27 @@
                                                         </ul>
                                                     </div>
                                                 @endif
-                                                <div class="form-group">
-                                                    <label>Nama Barang</label>
-                                                    <input type="text" class="form-control" name="nama">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Merk</label>
-                                                    <input type="text" class="form-control" name="merk">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Foto</label>
-                                                    <input type="file" class="form-control" name="foto">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Stok</label>
-                                                    <input type="number" class="form-control" name="stok">
-                                                </div>
-                                                <button type="submit" class="btn btn-primary">Kirim</button>
+                                                    <div class="form-group">
+                                                        <label class="form-label">Nama Tool</label>
+                                                        <input type="text" class="form-control" name="nama_tool">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Deskripsi</label>
+                                                        <input type="text" class="form-control" name="deskripsi">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Foto</label>
+                                                        <input type="file" class="form-control" name="foto">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Stok</label>
+                                                        <input type="number" class="form-control" name="stok">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>lokasi Tool</label>
+                                                        <input type="text" class="form-control" name="lokasi">
+                                                    </div>
+                                                <button type="submit" class="btn btn-primary">Kirim</button> 
                                             </form>
                                         </div>
 

@@ -15,16 +15,15 @@ return new class extends Migration
     {
         Schema::create('pengembalians', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_barang');
+            $table->string('kode_tool')->unique();
             $table->integer('jumlah');
             $table->date('tanggal_kembali');
-            $table->string('nama_peminjam');
             $table->string('status');
-            $table->unsignedBigInteger('id_peminjam');
-            $table->unsignedBigInteger('id_barang');
+            $table->unsignedBigInteger('id_tim');
+            $table->unsignedBigInteger('id_tool');
             $table->timestamps();
-            $table->foreign('id_barang')->references('id')->on('datapusats')->ondelete('cascade');
-            $table->foreign('id_peminjam')->references('id')->on('peminjamans')->ondelete('cascade');
+            $table->foreign('id_tool')->references('id')->on('datapusats')->ondelete('cascade');
+            $table->foreign('id_tim')->references('id')->on('tims')->ondelete('cascade');
         });
     }
 

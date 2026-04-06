@@ -11,15 +11,21 @@ class Barangkeluar extends Model
     protected $table="barangkeluars";
     protected $fillable = [
         'id',
-        'kode_barang',
+        'kode_tool',
+        'nama_tim',
         'jumlah',
         'tanggal_keluar',
         'keterangan',
-        'id_barang',
+        'lokasi',
+        'id_tool',
     ];
     public $timestamps = true;
 
     public function pusat(){
-        return $this->belongsTo(Datapusat::class, 'id_barang');
+        return $this->belongsTo(Datapusat::class, 'id_tool');
+    }
+
+    public function tim(){
+        return $this->belongsTo(Tim::class, 'nama_tim');
     }
 }

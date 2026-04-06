@@ -31,32 +31,25 @@
                     </a>
                 </li>
                 @if(Auth::user()->is_admin === 1)
-                    <li>
+                    {{-- <li>
                         <a href="{{ route('pengguna.index') }}" class="waves-effect waves-dark">
                             <span class="pcoded-micon"><i class="ti-user"></i><b>D</b></span>
                             <span class="pcoded-mtext" data-i18n="nav.dash.main">Pengguna</span>
                             <span class="pcoded-mcaret"></span>
                         </a>
-                    </li>
+                    </li> --}}
                     @endif
-                    <li>
-                        <a href="{{ route('peminjam.index') }}" class="waves-effect waves-dark">
-                            <span class="pcoded-micon"><i class="ti-arrow-left"></i><b>D</b></span>
-                            <span class="pcoded-mtext" data-i18n="nav.dash.main">Data Peminjam</span>
-                            <span class="pcoded-mcaret"></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('pengembalian.index') }}" class="waves-effect waves-dark">
-                            <span class="pcoded-micon"><i class="ti-arrow-right"></i><b>D</b></span>
-                            <span class="pcoded-mtext" data-i18n="nav.dash.main">Data Pengembalian</span>
-                            <span class="pcoded-mcaret"></span>
-                        </a>
-                    </li>
                     <li>
                         <a href="{{ route('datapusat.index') }}" class="waves-effect waves-dark">
                             <span class="pcoded-micon"><i class="ti-server"></i><b>D</b></span>
                             <span class="pcoded-mtext" data-i18n="nav.dash.main">Data Pusat</span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('tim.index') }}" class="waves-effect waves-dark">
+                            <span class="pcoded-micon"><i class="ti-briefcase"></i><b>D</b></span>
+                            <span class="pcoded-mtext" data-i18n="nav.dash.main">Data Tim</span>
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
@@ -71,6 +64,20 @@
                         <a href="{{ route('barangkeluar.index') }}" class="waves-effect waves-dark">
                             <span class="pcoded-micon"><i class="ti-export"></i><b>D</b></span>
                             <span class="pcoded-mtext" data-i18n="nav.dash.main">Data Barang Keluar</span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('peminjam.index') }}" class="waves-effect waves-dark">
+                            <span class="pcoded-micon"><i class="ti-arrow-left"></i><b>D</b></span>
+                            <span class="pcoded-mtext" data-i18n="nav.dash.main">Data Peminjam</span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('pengembalian.index') }}" class="waves-effect waves-dark">
+                            <span class="pcoded-micon"><i class="ti-arrow-right"></i><b>D</b></span>
+                            <span class="pcoded-mtext" data-i18n="nav.dash.main">Data Pengembalian</span>
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>

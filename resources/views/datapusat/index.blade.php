@@ -112,7 +112,7 @@
                                   <div class="col-md-8">
                                       <div class="page-header-title">
                                           <h5 class="m-b-10">Selamat Datang</h5>
-                                          <p class="m-b-0">Halaman Data Pusat</p>
+                                          <p class="m-b-0">Halaman Data Tool</p>
                                       </div>
                                   </div>
                                   <div class="col-md-4">
@@ -120,7 +120,7 @@
                                           <li class="breadcrumb-item">
                                               <a href="{{ route('home') }}"> <i class="fa fa-home"></i> </a>
                                           </li>
-                                          <li class="breadcrumb-item"><a href="#!">Datapusat</a>
+                                          <li class="breadcrumb-item"><a href="#!">Data Tool</a>
                                           </li>
                                       </ul>
                                   </div>
@@ -146,11 +146,12 @@
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">No</th>
-                                                                <th scope="col">Kode barang</th>
-                                                                <th scope="col">Nama Barang</th>
-                                                                <th scope="col">Merk Barang</th>
-                                                                <th scope="col">Foto Barang</th>
+                                                                <th scope="col">Kode Tool</th>
+                                                                <th scope="col">Nama Tool</th>
+                                                                <th scope="col">Deskripsi</th>
+                                                                <th scope="col">Foto Tool</th>
                                                                 <th scope="col">Stok</th>
+                                                                <th scope="col">Lokasi</th>
                                                                 <th scope="col">Aksi Tambahan</th>
                                                             </tr>
                                                         </thead>
@@ -159,11 +160,12 @@
                                                             @foreach ($datapusat as $data)
                                                             <tr>
                                                                 <th scope="row">{{ $no++ }}</th>
-                                                                <td>{{ $data->kode_barang }}</td>
-                                                                <td>{{ $data->nama }}</td>
-                                                                <td>{{ $data->merk }}</td>
+                                                                <td>{{ $data->kode_tool }}</td>
+                                                                <td>{{ $data->nama_tool }}</td>
+                                                                <td>{{ $data->deskripsi }}</td>
                                                                 <td><img src="{{asset('images/dp_foto/'. $data->foto)}}" width="100" alt=""></td>
                                                                 <td>{{ $data->stok }}</td>
+                                                                <td>{{ $data->lokasi }}</td>
                                                                 <td>
                                                                     <form action="{{ route('datapusat.destroy', $data->id) }}" method="POST">
                                                                     <a href="{{ route('datapusat.edit', $data->id) }}" class="btn btn-success">Edit</a>

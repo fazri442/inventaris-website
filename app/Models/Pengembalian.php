@@ -11,20 +11,19 @@ class Pengembalian extends Model
     protected $table="pengembalians";
     protected $fillable = [
         'id',
-        'kode_barang',
+        'kode_tool',
         'jumlah',
         'tanggal_kembali',
-        'nama_peminjam',
         'status',
-        'id_pinjam',
-        'id_barang',
+        'id_tim',
+        'id_tool',
     ];
     public $timestamps = true;
 
     public function pusat(){
-        return $this->belongsTo(Datapusat::class, 'id_barang');
+        return $this->belongsTo(Datapusat::class, 'id_tool');
     }
-    public function peminjam(){
-        return $this->belongsTo(Peminjaman::class, 'id_barang');
+    public function tim(){
+        return $this->belongsTo(Tim::class, 'id_tim');
     }
 }

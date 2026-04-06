@@ -11,16 +11,28 @@ class Peminjaman extends Model
     protected $table="peminjamans";
     protected $fillable = [
         'id',
-        'jumlah',
+        'kode_pinjam',
         'tanggal_pinjam',
         'tanggal_kembali',
-        'nama_peminjam',
+        'id_tim',
+        'id_tool',
+        'jumlah',
         'status',
-        'id_barang',
     ];
     public $timestamps = true;
 
-    public function pusat(){
-        return $this->belongsTo(Datapusat::class, 'id_barang');
+    public function datapusat(){
+        return $this->belongsTo(Datapusat::class, 'id_tool');
+    }
+    public function tim(){
+        return $this->belongsTo(Tim::class, 'id_tim');
+    }
+    public function detail()
+    {
+        return $this->hasMany(DetailPeminjaman::class, 'id_peminjaman');
+    }
+    public function pengembalian()
+    {
+        return $this->hasOne(Pengembalian::class, 'id_peminjam');
     }
 }

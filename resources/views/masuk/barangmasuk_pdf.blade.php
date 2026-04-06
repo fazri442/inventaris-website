@@ -62,22 +62,26 @@
         <thead>
             <tr>
             <th>No</th>
-            <th>Nama Barang</th>
-            <th>Kode Barang</th>
+            <th>Nama Tool</th>
+            <th>Nama Tim</th>
+            <th>Kode Tool</th>
             <th>Jumlah</th>
             <th>Tanggal Masuk</th>
-            <th>Keterangan</th> 
+            <th>Keterangan</th>
+            <th>Lokasi</th>
             </tr>
         </thead>
        <tbody>
             @foreach ($masuk as $i => $barangmasuk)
             <tr>
             <td>{{ $i + 1 }}</td>
-            <td>{{ $barangmasuk->pusat->nama }}</td>
-            <td>{{ $barangmasuk->kode_barang }}</td>
+            <td>{{ $barangmasuk->pusat->nama_tool }}</td>
+            <td>{{ $barangmasuk->nama_tim }}</td>
+            <td>{{ $barangmasuk->kode_tool }}</td>
             <td>{{ $barangmasuk->jumlah }}</td>
             <td>{{ $barangmasuk->tanggal_masuk }}</td>
             <td>{{ $barangmasuk->keterangan }}</td>
+            <td>{{ $barangmasuk->lokasi }}</td>
             </tr>
             @endforeach
         </tbody>

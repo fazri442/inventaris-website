@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\BarangMasuk;
 use App\Models\Datapusat;
+use App\Models\Tim;
 use Illuminate\Support\Facades\File;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
@@ -45,7 +46,8 @@ class BarangmasukController extends Controller
     {
         $barangmasuk = BarangMasuk::all();
         $datapusat = Datapusat::all();
-        return view('masuk.create', compact('barangmasuk', 'datapusat'));
+        $tim = Tim::all();
+        return view('masuk.create', compact('barangmasuk', 'datapusat', 'tim'));
     }
 
     /**
@@ -57,34 +59,41 @@ class BarangmasukController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'nama_tim' => 'required|string',
             'jumlah' => 'required|integer',
             'tanggal_masuk' => 'required|date',
             'keterangan' => 'nullable|string',
-            'id_barang' => 'required|exists:datapusats,id',
+            'lokasi' => 'nullable|string',
+            'id_tool' => 'required|exists:datapusats,id',
         ],
         [
+            'nama_tim.required' => 'Nama tim tidak boleh kosong',
+            'nama_tim.string' => 'Nama tim harus berupa teks',
             'jumlah.required' => 'Jumlah tidak boleh kosong',
             'jumlah.integer' => 'Jumlah harus berupa angka',
             'tglmasuk.required' => 'Tanggal masuk tidak boleh kosong',
             'tglmasuk.date' => 'Format tanggal tidak valid',
             'ket.string' => 'Keterangan harus berupa teks',
-            'id_barang.required' => 'ID Barang tidak boleh kosong',
-            'id_barang.exists' => 'ID Barang tidak ditemukan',
+            'lokasi.string' => 'Lokasi harus berupa teks',
+            'id_tool.required' => 'ID Tool tidak boleh kosong',
+            'id_tool.exists' => 'ID Tool tidak ditemukan',
         ]);
         $data = new BarangMasuk;
         $lastRecord = BarangMasuk::latest('id')->first();
         $lastId = $lastRecord ? $lastRecord->id : 0;
-        $kodebarang = 'PJB-' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
-        $data->kode_barang = $kodebarang;
+        $kodetool = 'MASUK-' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
+        $data->kode_tool = $kodetool;
 
-        $pusat = Datapusat::find($request->id_barang);
+        $pusat = Datapusat::find($request->id_tool);
         $pusat->stok += $request->jumlah;
         $pusat->save();
 
+        $data->nama_tim = $request->nama_tim;
         $data->jumlah = $request->jumlah;
         $data->tanggal_masuk = $request->tanggal_masuk;
         $data->keterangan = $request->keterangan;
-        $data->id_barang = $request->id_barang;
+        $data->lokasi = $request->lokasi;
+        $data->id_tool = $request->id_tool;
 
         $data->save();
         return redirect()->route('barangmasuk.index')->with('success', 'Data Berhasil Masuk');
@@ -124,29 +133,35 @@ class BarangmasukController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
+            'nama_tim' => 'required|string',
             'jumlah' => 'required|integer',
             'tanggal_masuk' => 'required|date',
             'keterangan' => 'nullable|string',
-            'id_barang' => 'required|exists:datapusats,id',
+            'id_tool' => 'required|exists:datapusats,id',
         ],
         [
+            'nama_tim.required' => 'Nama tim tidak boleh kosong',
+            'nama_tim.string' => 'Nama tim harus berupa teks',
             'jumlah.required' => 'Jumlah tidak boleh kosong',
             'jumlah.integer' => 'Jumlah harus berupa angka',
             'tanggal_masuk.required' => 'Tanggal masuk tidak boleh kosong',
             'tanggal_masuk.date' => 'Format tanggal tidak valid',
             'keterangan.string' => 'Keterangan harus berupa teks',
-            'id_barang.required' => 'ID Barang tidak boleh kosong',
-            'id_barang.exists' => 'ID Barang tidak ditemukan',
+            'id_tool.required' => 'ID Tool tidak boleh kosong',
+            'id_tool.exists' => 'ID Tool tidak ditemukan',
         ]);
         $data = BarangMasuk::findorfail($id);
-        $pusat = Datapusat::findorfail($data->id_barang);
+        $pusat = Datapusat::findorfail($data->id_tool);
         $pusat->stok -= $data->jumlah;
         $pusat->stok += $request->jumlah;
         $pusat->save();
 
+        $data->nama_tim = $request->nama_tim;
         $data->jumlah = $request->jumlah;
         $data->tanggal_masuk = $request->tanggal_masuk;
         $data->keterangan = $request->keterangan;
+        $data->lokasi = $request->lokasi;
+        $data->id_tool = $request->id_tool;
         $data->save();
 
         return redirect()->route('barangmasuk.index')->with('success', 'Data Berhasil Dirubah');
@@ -161,9 +176,6 @@ class BarangmasukController extends Controller
     public function destroy($id)
     {
         $data = BarangMasuk::findorfail($id);
-        $pusat = Datapusat::find($data->id_barang);
-        $pusat->stok -= $data->jumlah;
-        $pusat->save();
         $data->delete();
         return redirect()->route('barangmasuk.index')->with('success', 'Data Berhasil Dihapus');
     }

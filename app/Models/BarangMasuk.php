@@ -11,15 +11,20 @@ class BarangMasuk extends Model
     protected $table="barangmasuks";
     protected $fillable = [
         'id',
-        'kode_barang',
+        'kode_tool',
+        'nama_tim',
         'jumlah',
         'tanggal_masuk',
         'keterangan',
-        'id_barang',
+        'lokasi',
+        'id_tool',
     ];
     public $timestamps = true;
 
     public function pusat(){
-        return $this->belongsTo(Datapusat::class, 'id_barang');
+        return $this->belongsTo(Datapusat::class, 'id_tool');
+    }
+    public function tim(){
+        return $this->belongsTo(Tim::class, 'nama_tim');
     }
 }

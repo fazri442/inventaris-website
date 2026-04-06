@@ -12,27 +12,32 @@ use App\Models\Pengembalian;
 class Datapusat extends Model
 {
     use HasFactory;
-    protected $fillable = ['id', 'kode_barang', 'nama', 'merk', 'foto', 'stok'];
+    protected $fillable = ['id', 'kode_tool', 'nama_tool', 'foto', 'stok', 'deskripsi', 'lokasi'];
     public $timestamp = true;
 
     public function barangMasuks()
     {
-        return $this->hasMany(BarangMasuk::class, 'id_barang', 'id');
+        return $this->hasMany(BarangMasuk::class, 'id_tool', 'id');
     }
 
     public function barangKeluars()
     {
-        return $this->hasMany(BarangKeluar::class, 'id_barang', 'id');  
+        return $this->hasMany(BarangKeluar::class, 'id_tool', 'id');  
     }
 
     public function peminjamans()
     {
-        return $this->hasMany(Peminjaman::class, 'id_barang', 'id');
+        return $this->hasMany(Peminjaman::class, 'id_tool', 'id');
     }
 
     public function pengembalians()
     {
         return $this->hasMany(Pengembalian::class);
+    }
+
+    public function detail()
+    {
+        return $this->hasMany(DetailPeminjaman::class, 'id_tool', 'id');
     }
 
     public function deleteImage(){

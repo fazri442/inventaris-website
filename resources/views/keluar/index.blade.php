@@ -150,10 +150,11 @@
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col">No</th>
-                                                                <th scope="col">Nama Barang</th>
-                                                                <th scope="col">Jumlah Barang</th>
-                                                                <th scope="col">Tanggal Keluar Barang</th>
+                                                                <th scope="col">Nama Tool</th>
+                                                                <th scope="col">Jumlah Tool</th>
+                                                                <th scope="col">Tanggal Keluar Tool</th>
                                                                 <th scope="col">Keterangan</th>
+                                                                <th scope="col">Lokasi</th>
                                                                 <th scope="col">Aksi Tambahan</th>
                                                             </tr>
                                                         </thead>
@@ -162,10 +163,11 @@
                                                             @foreach ($keluar as $data)
                                                             <tr>
                                                                 <th scope="row">{{ $no++ }}</th>
-                                                                <td>{{ $data->pusat->nama }}</td>
+                                                                <td>{{ $data->pusat->nama_tool }}</td>
                                                                 <td>{{ $data->jumlah }}</td>
                                                                 <td>{{ $data->tanggal_keluar }}</td>
                                                                 <td>{{ $data->keterangan }}</td>
+                                                                <td>{{ $data->lokasi }}</td>
                                                                 <td>
                                                                     <form action="{{ route('barangkeluar.destroy', $data->id) }}" method="POST">
                                                                     <a href="{{ route('barangkeluar.edit', $data->id) }}" class="btn btn-success">Edit</a>
