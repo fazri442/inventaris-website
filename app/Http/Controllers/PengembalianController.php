@@ -38,11 +38,11 @@ class PengembalianController extends Controller
         foreach ($kembali as $data) {
             $data->formatted_tanggal = Carbon::parse($data->tanggal_kembali)->translatedFormat('l, d F Y');
         }
-        $peminjam = Peminjaman::with(['pengembalian.pinjam'])  // load peminjaman + tim
+        $peminjam = Peminjaman::with(['pengembalian.datapusat'])  // load peminjaman + tim
                 ->get();  // atau query lain sesuai kebutuhan
 
             // atau kalau view langsung pakai $pinjam dari Peminjaman:
-            $pengembalian = Pengembalian::with('pinjam')->where('status', 'Sudah Dikembalikan')->get();
+            $pengembalian = Pengembalian::with('datapusat')->where('status', 'Sudah Dikembalikan')->get();
         return view('pengembalian.index', compact('kembali', 'peminjam', 'pengembalian'));
     }
 

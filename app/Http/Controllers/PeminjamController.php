@@ -53,7 +53,7 @@ class PeminjamController extends Controller
                 ->get();  // atau query lain sesuai kebutuhan
 
             // atau kalau view langsung pakai $pinjam dari Peminjaman:
-            $pinjam = Peminjaman::with('pinjam')->where('status', 'Sedang Dipinjam')->get();
+            $pinjam = Peminjaman::with('datapusat')->where('status', 'Sedang Dipinjam')->get();
             return view('peminjam.index', compact('pinjam', 'detail', 'tim', 'pengembalian'));
     }
 
@@ -114,6 +114,8 @@ class PeminjamController extends Controller
             'id_tim'   => $request->id_tim,
             'tanggal_pinjam'  => $request->tanggal_pinjam,
             'tanggal_kembali' => $request->tanggal_kembali,
+            'jumlah' => $request->tools[0]['jumlah'],
+            'id_tool' => $request->tools[0]['id_tool'],
             'status'          => 'Sedang Dipinjam',
         ]);
 

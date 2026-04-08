@@ -20,7 +20,7 @@ class Pengembalian extends Model
     ];
     public $timestamps = true;
 
-    public function pusat(){
+    public function datapusat(){
         return $this->belongsTo(Datapusat::class, 'id_tool');
     }
     public function tim(){

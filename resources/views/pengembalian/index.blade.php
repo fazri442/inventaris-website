@@ -154,7 +154,7 @@
                                                                 <td>{{ $data->kode_pinjam }}</td>
                                                                 <td>{{ $data->detail->sum('jumlah') }}</td>
                                                                 <td>{{ $data->tanggal_kembali }}</td>
-                                                                <td>{{ $data->pinjam->nama_anggota_tim }}</td>
+                                                                <td>{{ $data->tim->nama_anggota_tim }}</td>
                                                                 <td>{{ $data->status }}</td>
                                                                 <td>
                                                                     <form action="{{ route('pengembalian.destroy', $data->id) }}" method="POST">
