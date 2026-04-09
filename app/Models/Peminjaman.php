@@ -33,6 +33,6 @@ class Peminjaman extends Model
     }
     public function pengembalian()
     {
-        return $this->hasOne(Pengembalian::class, 'kode_pinjam');
+        return $this->hasOne(Pengembalian::class, 'status');
     }
 }

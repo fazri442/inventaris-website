@@ -26,4 +26,8 @@ class Pengembalian extends Model
     public function tim(){
         return $this->belongsTo(Tim::class, 'id_tim');
     }
+    public function peminjaman()
+    {
+        return $this->belongsTo(Peminjaman::class, 'status', 'kode_pinjam');
+    }
 }
