@@ -1,86 +1,54 @@
-<nav class="pcoded-navbar">
-    <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
-        <div class="pcoded-inner-navbar main-menu">
-            <div class="">
-                <div class="main-menu-content">
-                    <ul>
-                        <li class="more-details">
-                            <a href="user-profile.html"><i class="ti-user"></i>View Profile</a>
-                            <a href="#!"><i class="ti-settings"></i>Settings</a>
-                            <a href="auth-normal-sign-in.html"><i class="ti-layout-sidebar-left"></i>Logout</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            {{-- <div class="p-15 p-b-0">
-                <form class="form-material">
-                    <div class="form-group form-primary">
-                        <input type="text" name="footer-email" class="form-control" required="">
-                        <span class="form-bar"></span>
-                        <label class="float-label"><i class="fa fa-search m-r-10"></i>Search Friend</label>
-                    </div>
-                </form>
-            </div> --}}
-            <div class="pcoded-navigation-label" data-i18n="nav.category.navigation">Daftar Isi</div>
-            <ul class="pcoded-item pcoded-left-item">
-                <li>
-                    <a href="{{ route('home') }}" class="waves-effect waves-dark">
-                        <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
-                        <span class="pcoded-mtext" data-i18n="nav.dash.main">Halaman Utama</span>
-                        <span class="pcoded-mcaret"></span>
-                    </a>
-                </li>
-                @if(Auth::user()->is_admin === 1)
-                    {{-- <li>
-                        <a href="{{ route('pengguna.index') }}" class="waves-effect waves-dark">
-                            <span class="pcoded-micon"><i class="ti-user"></i><b>D</b></span>
-                            <span class="pcoded-mtext" data-i18n="nav.dash.main">Pengguna</span>
-                            <span class="pcoded-mcaret"></span>
-                        </a>
-                    </li> --}}
-                    @endif
-                    <li>
-                        <a href="{{ route('datapusat.index') }}" class="waves-effect waves-dark">
-                            <span class="pcoded-micon"><i class="ti-server"></i><b>D</b></span>
-                            <span class="pcoded-mtext" data-i18n="nav.dash.main">Data Pusat</span>
-                            <span class="pcoded-mcaret"></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('tim.index') }}" class="waves-effect waves-dark">
-                            <span class="pcoded-micon"><i class="ti-briefcase"></i><b>D</b></span>
-                            <span class="pcoded-mtext" data-i18n="nav.dash.main">Data Tim</span>
-                            <span class="pcoded-mcaret"></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('barangmasuk.index') }}" class="waves-effect waves-dark">
-                            <span class="pcoded-micon"><i class="ti-import"></i><b>D</b></span>
-                            <span class="pcoded-mtext" data-i18n="nav.dash.main">Data Barang Masuk</span>
-                            <span class="pcoded-mcaret"></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('barangkeluar.index') }}" class="waves-effect waves-dark">
-                            <span class="pcoded-micon"><i class="ti-export"></i><b>D</b></span>
-                            <span class="pcoded-mtext" data-i18n="nav.dash.main">Data Barang Keluar</span>
-                            <span class="pcoded-mcaret"></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('peminjam.index') }}" class="waves-effect waves-dark">
-                            <span class="pcoded-micon"><i class="ti-arrow-left"></i><b>D</b></span>
-                            <span class="pcoded-mtext" data-i18n="nav.dash.main">Data Peminjam</span>
-                            <span class="pcoded-mcaret"></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('pengembalian.index') }}" class="waves-effect waves-dark">
-                            <span class="pcoded-micon"><i class="ti-arrow-right"></i><b>D</b></span>
-                            <span class="pcoded-mtext" data-i18n="nav.dash.main">Data Pengembalian</span>
-                            <span class="pcoded-mcaret"></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-</nav>
+<aside class="w-64 bg-white border-r border-slate-200 flex flex-col hidden md:flex h-screen sticky top-0">
+    <div class="p-6">
+        <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            InvenTool
+        </h2>
+    </div>
+    
+    <nav class="flex-1 px-4 space-y-2 overflow-y-auto">
+
+        <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider px-3 mb-2">Main Menu</p>
+        
+        <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl {{ request()->routeIs('home') ? 'bg-blue-50 text-blue-600 font-medium' : 'text-slate-500 hover:bg-slate-50' }} transition-all">
+            <i class="fa-solid fa-house text-sm"></i>
+            <span class="text-sm">Halaman Utama</span>
+        </a>
+
+        <div class="pt-4">
+            <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider px-3 mb-2">Inventaris</p>
+            <a href="{{ route('barangmasuk.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 transition-all">
+                <i class="fa-solid fa-box-archive text-sm"></i>
+                <span class="text-sm">Barang Masuk</span>
+            </a>
+
+            <a href="{{ route('barangkeluar.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 transition-all">
+                <i class="fa-solid fa-truck-ramp-box text-sm"></i>
+                <span class="text-sm">Barang Keluar</span>
+            </a>
+        </div>
+
+        <div class="pt-4">
+            <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider px-3 mb-2">Transaksi</p>
+            <a href="{{ route('peminjaman.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 transition-all">
+                <i class="fa-solid fa-hand-holding-heart text-sm"></i>
+                <span class="text-sm">Peminjaman</span>
+            </a>
+
+            <a href="{{ route('pengembalian.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 transition-all mt-1">
+                <i class="fa-solid fa-rotate-left text-sm"></i>
+                <span class="text-sm">Pengembalian</span>
+            </a>
+        </div>
+
+    </nav>
+
+    <div class="p-4 border-t border-slate-100">
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button class="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-rose-500 hover:bg-rose-50 transition-all">
+                <i class="fa-solid fa-arrow-right-from-bracket text-sm"></i>
+                <span class="text-sm font-medium">Keluar</span>
+            </button>
+        </form>
+    </div>
+</aside>

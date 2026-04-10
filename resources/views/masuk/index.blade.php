@@ -1,277 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <title>Barang Masuk</title>
-    <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 10]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-      <![endif]-->
-      <!-- Meta -->
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-      <meta name="description" content="Mega Able Bootstrap admin template made using Bootstrap 4 and it has huge amount of ready made feature, UI components, pages which completely fulfills any dashboard needs." />
-      <meta name="keywords" content="bootstrap, bootstrap admin template, admin theme, admin dashboard, dashboard template, admin template, responsive" />
-      <meta name="author" content="codedthemes" />
-      <!-- Favicon icon -->
-      <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
-    <!-- Google font-->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
-    <!-- waves.css -->
-    <link rel="stylesheet" href="{{ asset ('front/pages/waves/css/waves.min.css') }}" type="text/css" media="all">
-      <!-- Required Fremwork -->
-      <link rel="stylesheet" type="text/css" href="{{ asset('front/css/bootstrap/css/bootstrap.min.css') }}">
-      <!-- waves.css -->
-      <link rel="stylesheet" href="{{asset ('front/pages/waves/css/waves.min.css') }}" type="text/css" media="all">
-      <!-- themify icon -->
-      <link rel="stylesheet" type="text/css" href="{{asset ('front/icon/themify-icons/themify-icons.css') }}">
-      <!-- Font Awesome -->
-      <link rel="stylesheet" type="text/css" href="{{asset ('front/icon/font-awesome/css/font-awesome.min.css') }}">
-      <!-- scrollbar.css -->
-      <link rel="stylesheet" type="text/css" href="{{asset ('front/css/jquery.mCustomScrollbar.css') }}">
-        <!-- am chart export.css -->
-        <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
-      <!-- Style.css -->
-      <link rel="stylesheet" type="text/css" href="{{ asset ('front/css/style.css') }}">
-  </head>
+@section('content')
+<div class="space-y-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900">Data Barang Masuk</h1>
+            <p class="text-sm text-slate-500 text-sm">Kelola dan pantau seluruh riwayat barang yang masuk ke inventaris.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="{{ route('barangmasuk.export') }}" target="_blank" 
+               class="flex items-center gap-2 px-5 py-2.5 bg-rose-50 text-rose-600 rounded-2xl font-semibold hover:bg-rose-100 transition-all border border-rose-100">
+                <i class="fa-solid fa-file-pdf"></i>
+                <span>Buat PDF</span>
+            </a>
+            <a href="{{ route('barangmasuk.create') }}" 
+               class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-2xl font-semibold hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all">
+                <i class="fa-solid fa-plus text-sm"></i>
+                <span>Tambah Data</span>
+            </a>
+        </div>
+    </div>
 
-  <body>
-  <!-- Pre-loader start -->
-  <div class="theme-loader">
-      <div class="loader-track">
-          <div class="preloader-wrapper">
-              <div class="spinner-layer spinner-blue">
-                  <div class="circle-clipper left">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="gap-patch">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="circle-clipper right">
-                      <div class="circle"></div>
-                  </div>
-              </div>
-              <div class="spinner-layer spinner-red">
-                  <div class="circle-clipper left">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="gap-patch">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="circle-clipper right">
-                      <div class="circle"></div>
-                  </div>
-              </div>
-            
-              <div class="spinner-layer spinner-yellow">
-                  <div class="circle-clipper left">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="gap-patch">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="circle-clipper right">
-                      <div class="circle"></div>
-                  </div>
-              </div>
-            
-              <div class="spinner-layer spinner-green">
-                  <div class="circle-clipper left">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="gap-patch">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="circle-clipper right">
-                      <div class="circle"></div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-  <!-- Pre-loader end -->
-  <div id="pcoded" class="pcoded">
-      <div class="pcoded-overlay-box"></div>
-      <div class="pcoded-container navbar-wrapper">
-        {{-- navbar   --}}
-        @include('layouts.part.navbar')
-        {{-- navbar --}}
-            <div class="pcoded-main-container">
-              <div class="pcoded-wrapper">
-                {{-- sidiebar --}}
-                  @include('layouts.part.sidebar')
-                {{-- sidebar --}}
-                  <div class="pcoded-content">
-                      <!-- Page-header start -->
-                      <div class="page-header">
-                          <div class="page-block">
-                              <div class="row align-items-center">
-                                  <div class="col-md-8">
-                                      <div class="page-header-title">
-                                          <h5 class="m-b-10">Selamat Datang</h5>
-                                          <p class="m-b-0">Halaman Barang Masuk</p>
-                                      </div>
-                                  </div>
-                                  <div class="col-md-4">
-                                      <ul class="breadcrumb-title">
-                                          <li class="breadcrumb-item">
-                                              <a href="{{ route('home') }}"> <i class="fa fa-home"></i> </a>
-                                          </li>
-                                          <li class="breadcrumb-item"><a href="#!">Barang Masuk</a>
-                                          </li>
-                                      </ul>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
+    @if (session('success'))
+    <div class="bg-emerald-50 border border-emerald-100 text-emerald-600 px-6 py-4 rounded-2xl flex items-center gap-3 animate-fade-in">
+        <i class="fa-solid fa-circle-check text-xl"></i>
+        <p class="font-medium">{{ session('success') }}</p>
+    </div>
+    @endif
 
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h5>Data Barang Masuk</h5>
-                                                <br>
-                                                <a href="{{ route('barangmasuk.create') }}" class="btn btn-primary">Tambah Data</a>
-                                                <a href="{{ route('barangmasuk.export') }}" target="_blank">
-                                                    <button type="button" class="btn btn-danger">
-                                                        <i class="bx bx-file"></i> Buat PDF
-                                                    </button>
-                                                </a>
-                                            </div>
-                                            @if (session('success'))
-                                            <div class="alert alert-success show">
-                                                {{ session('success') }}
-                                            </div>
-                                            @endif
-                                            <div class="card-block table-border-style">
-                                                <div class="table-responsive">
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col">No</th>
-                                                                <th scope="col">Nama Tool</th>
-                                                                <th scope="col">Nama Tim</th>
-                                                                <th scope="col">Jumlah Tool</th>
-                                                                <th scope="col">Tanggal Masuk Tool</th>
-                                                                <th scope="col">Keterangan</th>
-                                                                <th scope="col">Lokasi</th>
-                                                                <th scope="col">Aksi Tambahan</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @php $no = 1; @endphp
-                                                            @foreach ($masuk as $data)
-                                                            <tr>
-                                                                <th scope="row">{{ $no++ }}</th>
-                                                                <td>{{ $data->pusat->nama_tool }}</td>
-                                                                <td>{{ $data->nama_tim }}</td>
-                                                                <td>{{ $data->jumlah }}</td>
-                                                                <td>{{ $data->tanggal_masuk }}</td>
-                                                                <td>{{ $data->keterangan }}</td>
-                                                                <td>{{ $data->lokasi }}</td>
-                                                                <td>
-                                                                    <form action="{{ route('barangmasuk.destroy', $data->id) }}" method="POST">
-                                                                    <a href="{{ route('barangmasuk.edit', $data->id) }}" class="btn btn-success">Edit</a>
-                                                                        @csrf
-                                                                        @method('DELETE')
-                                                                        <button type="submit" class="btn btn-danger"
-                                                                            onclick="return confirm('Apakah anda yakin?')">Hapus</button>
-                                                                    </form>
-                                                                </td>
-                                                            </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                </div>
-                                <div id="styleSelector"> </div>
+    <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/50">
+                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">No</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Nama Tool</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Nama Tim</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Jumlah</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Tanggal Masuk</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Lokasi</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @php $no = 1; @endphp
+                    @forelse ($masuk as $data)
+                    <tr class="hover:bg-slate-50/80 transition-colors group">
+                        <td class="px-6 py-4 text-sm text-slate-600 font-medium">{{ $no++ }}</td>
+                        <td class="px-6 py-4">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-slate-900">{{ $data->pusat->nama_tool }}</span>
+                                <span class="text-[11px] text-slate-400 italic">{{ $data->keterangan ?? 'Tanpa keterangan' }}</span>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-xs font-semibold">
+                                {{ $data->nama_tim }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm font-bold text-slate-700">
+                            {{ $data->jumlah }} <span class="text-xs font-normal text-slate-400 ml-1 italic">Unit</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-500">
+                            {{ \Carbon\Carbon::parse($data->tanggal_masuk)->format('d M Y') }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2 text-sm text-slate-600">
+                                <i class="fa-solid fa-location-dot text-slate-300"></i>
+                                {{ $data->lokasi }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center justify-center gap-2">
+                                <a href="{{ route('barangmasuk.edit', $data->id) }}" 
+                                   class="w-9 h-9 flex items-center justify-center bg-amber-50 text-amber-600 rounded-xl hover:bg-amber-100 transition-all"
+                                   title="Edit Data">
+                                    <i class="fa-solid fa-pen-to-square text-sm"></i>
+                                </a>
+                                
+                                <form action="{{ route('barangmasuk.destroy', $data->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" 
+                                            onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')"
+                                            class="w-9 h-9 flex items-center justify-center bg-rose-50 text-rose-600 rounded-xl hover:bg-rose-100 transition-all"
+                                            title="Hapus Data">
+                                        <i class="fa-solid fa-trash-can text-sm"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center">
+                            <div class="flex flex-col items-center">
+                                <i class="fa-solid fa-box-open text-4xl text-slate-200 mb-3"></i>
+                                <p class="text-slate-400 text-sm">Belum ada data barang masuk.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
-    <!-- Warning Section Starts -->
-    <!-- Older IE warning message -->
-    <!--[if lt IE 10]>
-    <div class="ie-warning">
-        <h1>Warning!!</h1>
-        <p>You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers to access this website.</p>
-        <div class="iew-container">
-            <ul class="iew-download">
-                <li>
-                    <a href="http://www.google.com/chrome/">
-                        <img src="assets/images/browser/chrome.png" alt="Chrome">
-                        <div>Chrome</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://www.mozilla.org/en-US/firefox/new/">
-                        <img src="assets/images/browser/firefox.png" alt="Firefox">
-                        <div>Firefox</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="http://www.opera.com">
-                        <img src="assets/images/browser/opera.png" alt="Opera">
-                        <div>Opera</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://www.apple.com/safari/">
-                        <img src="assets/images/browser/safari.png" alt="Safari">
-                        <div>Safari</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
-                        <img src="assets/images/browser/ie.png" alt="">
-                        <div>IE (9 & above)</div>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <p>Sorry for the inconvenience!</p>
-    </div>
-    <![endif]-->
-    <!-- Warning Section Ends -->
-    
-    <!-- Required Jquery -->
-    <script type="text/javascript" src="{{ asset ('front/js/jquery/jquery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset ('front/js/jquery-ui/jquery-ui.min.js') }} "></script>
-    <script type="text/javascript" src="{{ asset ('front/js/popper.js/popper.min.js') }}"></script>
-    <script type="text/javascript" src="{{asset ('front/js/bootstrap/js/bootstrap.min.js') }} "></script>
-    <script type="text/javascript" src="{{asset ('front/pages/widget/excanvas.js') }} "></script>
-    <!-- waves js -->
-    <script src="{{ asset ('front/pages/waves/js/waves.min.js') }}"></script>
-    <!-- jquery slimscroll js -->
-    <script type="text/javascript" src="{{ asset ('front/js/jquery-slimscroll/jquery.slimscroll.js') }} "></script>
-    <!-- modernizr js -->
-    <script type="text/javascript" src="{{ asset ('front/js/modernizr/modernizr.js') }} "></script>
-    <!-- slimscroll js -->
-    <script type="text/javascript" src="{{ asset ('front/js/SmoothScroll.js') }}"></script>
-    <script src="{{ asset('front/js/jquery.mCustomScrollbar.concat.min.js') }} "></script>
-    <!-- Chart js -->
-    <script type="text/javascript" src="{{ asset ('front/js/chart.js/Chart.js') }}"></script>
-    <!-- amchart js -->
-    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
-    <script src="{{ asset('front/pages/widget/amchart/gauge.js') }}"></script>
-    <script src="{{ asset('front/pages/widget/amchart/serial.js') }}"></script>
-    <script src="{{ asset('front/pages/widget/amchart/light.js') }}"></script>
-    <script src="{{ asset('front/pages/widget/amchart/pie.min.js') }}"></script>
-    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
-    <!-- menu js -->
-    <script src="{{ asset('front/js/pcoded.min.js') }}"></script>
-    <script src="{{ asset('front/js/vertical-layout.min.js') }} "></script>
-    <!-- custom js -->
-    <script type="text/javascript" src="{{ asset ('front/pages/dashboard/custom-dashboard.js') }}"></script>
-    <script type="text/javascript" src="{{ asset ('front/js/script.js') }} "></script>
-</body>
-
-</html>
+</div>
+@endsection

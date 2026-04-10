@@ -36,7 +36,7 @@ Route::resource('datapusat', DataPusatController::class);
 // Tambahan untuk export PDF
 Route::get('barang-export', [DataPusatController::class, 'export'])->name('barang.export');
 
-Route::resource('peminjam', PeminjamController::class);
+Route::resource('peminjaman', PeminjamController::class);
 Route::get('peminjam-export', [PeminjamController::class, 'export'])->name('peminjam.export');
 
 Route::resource('barangmasuk', BarangMasukController::class);
