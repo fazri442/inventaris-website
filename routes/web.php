@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DataPusatController;
 use App\Http\Controllers\PeminjamController;
-use App\Http\Controllers\BarangMasukController;
+use App\Http\Controllers\BarangmasukController;
 use App\Http\Controllers\BarangkeluarController;
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\PenggunaController;
@@ -39,8 +39,8 @@ Route::get('barang-export', [DataPusatController::class, 'export'])->name('baran
 Route::resource('peminjaman', PeminjamController::class);
 Route::get('peminjam-export', [PeminjamController::class, 'export'])->name('peminjam.export');
 
-Route::resource('barangmasuk', BarangMasukController::class);
-Route::get('barangmasuk-export', [BarangMasukController::class, 'export'])->name('barangmasuk.export');
+Route::resource('barangmasuk', BarangmasukController::class);
+Route::get('barangmasuk-export', [BarangmasukController::class, 'export'])->name('barangmasuk.export');
 
 route::resource('barangkeluar', BarangkeluarController::class);
 Route::get('barangkeluar-export', [BarangkeluarController::class, 'export'])->name('barangkeluar.export');
