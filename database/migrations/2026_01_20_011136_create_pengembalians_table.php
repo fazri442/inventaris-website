@@ -12,20 +12,17 @@ return new class extends Migration
      * @return void
      */
     public function up()
-    {
-        Schema::create('pengembalians', function (Blueprint $table) {
-            $table->id();
-            $table->string('kode_tool')->unique();
-            $table->integer('jumlah');
-            $table->date('tanggal_kembali');
-            $table->string('status');
-            $table->unsignedBigInteger('id_tim');
-            $table->unsignedBigInteger('id_tool');
-            $table->timestamps();
-            $table->foreign('id_tool')->references('id')->on('datapusats')->ondelete('cascade');
-            $table->foreign('id_tim')->references('id')->on('tims')->ondelete('cascade');
-        });
-    }
+{
+    Schema::create('pengembalians', function (Blueprint $table) {
+        $table->id();
+        $table->unsignedBigInteger('peminjaman_id');
+        $table->integer('jumlah_dikembalikan');
+        $table->date('tanggal_kembali');
+        $table->timestamps();
+        $table->foreign('peminjaman_id')->references('id')->on('peminjamans')->onDelete('cascade');
+    });
+}
+
 
     /**
      * Reverse the migrations.

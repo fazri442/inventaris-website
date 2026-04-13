@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Pengembalian;
 use App\Models\Datapusat;
 use App\Models\Tim;
+use App\Models\Peminjaman;
+use Illuminate\Support\Facades\DB;
 
 class PengembalianApiController extends Controller
 {
@@ -19,6 +21,56 @@ class PengembalianApiController extends Controller
             'data' => $pengembalian,
         ], 200);
     }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'peminjaman_id' => 'required|exists:peminjamans,id',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $peminjaman = Peminjaman::findOrFail($request->peminjaman_id);
+
+            if ($peminjaman->status == 'dikembalikan') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Sudah dikembalikan'
+                ], 400);
+            }
+
+            $pengembalian = Pengembalian::create([
+                'peminjaman_id' => $peminjaman->id,
+                'jumlah_dikembalikan' => $peminjaman->jumlah,
+                'tanggal_kembali' => now(),
+            ]);
+
+            $peminjaman->update([
+                'status' => 'dikembalikan',
+                'tanggal_kembali' => now(),
+            ]);
+
+            $tool = Datapusat::find($peminjaman->id_tool);
+            $tool->increment('stok', $peminjaman->jumlah);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pengembalian berhasil',
+                'data' => $pengembalian
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 
     public function show($id)
     {

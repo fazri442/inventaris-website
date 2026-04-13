@@ -27,7 +27,7 @@ class Datapusat extends Model
 
     public function peminjamans()
     {
-        return $this->hasMany(Peminjaman::class, 'id_tool', 'id');
+        return $this->hasMany(Peminjaman::class, 'id_tool');
     }
 
     public function pengembalians()

@@ -53,8 +53,8 @@ class PeminjamController extends Controller
                 ->get();  // atau query lain sesuai kebutuhan
 
             // atau kalau view langsung pakai $pinjam dari Peminjaman:
-            $pinjam = Peminjaman::with('datapusat')->where('status', 'Sedang Dipinjam')->get();
-            return view('peminjam.index', compact('pinjam', 'detail', 'tim', 'pengembalian'));
+            $pinjam = Peminjaman::with(['tim', 'datapusat', 'pengembalian'])->get();
+            return view('peminjam.index');
     }
 
     public function export()
@@ -87,75 +87,47 @@ class PeminjamController extends Controller
 
     public function store(Request $request)
     {
-    $validated = $request->validate([
-            'id_tim'    => 'required|exists:tims,id',
-            'tanggal_pinjam'   => 'required|date',
-            'tanggal_kembali'  => 'required|date|after_or_equal:tanggal_pinjam',
-            'tools'            => 'required|array|min:1',
-            'tools.*.id_tool'  => 'required|exists:datapusats,id|distinct',
-            'tools.*.jumlah'   => 'required|integer|min:1',
-        ], [
-            'tools.required'         => 'Minimal pilih 1 barang',
-            'tools.min'              => 'Minimal pilih 1 barang',
-            'tools.*.id_tool.exists' => 'Salah satu barang tidak valid',
-            'tools.*.jumlah.min'     => 'Jumlah minimal 1',
-        ]); // validasi kamu
-
-    try {
         DB::beginTransaction();
+        try {
+            // 🔍 Ambil tool
+            $tool = Datapusat::findOrFail($request->id_tool);
 
-        $last = Peminjaman::latest('id')->first();
-        $lastId = $last ? $last->id : 0;
-        $kode_pinjam = 'PJB-' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
-
-        // Buat header
-        $peminjaman = Peminjaman::create([
-            'kode_pinjam'     => $kode_pinjam,
-            'id_tim'   => $request->id_tim,
-            'tanggal_pinjam'  => $request->tanggal_pinjam,
-            'tanggal_kembali' => $request->tanggal_kembali,
-            'jumlah' => $request->tools[0]['jumlah'],
-            'id_tool' => $request->tools[0]['id_tool'],
-            'status'          => 'Sedang Dipinjam',
-        ]);
-
-        // Debug setelah insert header
-        Log::info('Header peminjaman dibuat', ['id' => $peminjaman->id]);
-
-        foreach ($validated['tools'] as $item) {
-            $tool = Datapusat::findOrFail($item['id_tool']);
-            $jumlah = (int) $item['jumlah'];
-
-            if ($tool->stok < $jumlah) {
-                throw new \Exception("Stok {$tool->nama_tool} tidak cukup. Tersisa: {$tool->stok}");
+            // ❗ Validasi stok
+            if ($tool->stok < $request->jumlah) {
+                return response()->json([
+                    'message' => 'Stok tidak mencukupi'
+                ], 400);
             }
 
-            // Simpan detail
-            $detail = DetailPeminjaman::create([
-                'id_peminjaman' => $peminjaman->id,
-                'id_tool'       => $tool->id,
-                'jumlah'        => $jumlah,
+            // 📝 Simpan peminjaman
+            $peminjaman = Peminjaman::create([
+                'kode_pinjam' => 'PJM-' . time(),
+                'id_tim' => $request->id_tim,
+                'id_tool' => $request->id_tool,
+                'jumlah' => $request->jumlah,
+                'tanggal_pinjam' => now(),
+                'tanggal_rencana_kembali' => $request->tanggal_rencana_kembali,
+                'status' => 'dipinjam',
             ]);
 
-            Log::info('Detail dibuat', ['detail_id' => $detail->id]);
+            // ➖ Kurangi stok
+            $tool->decrement('stok', $request->jumlah);
 
-            // Kurangi stok
-            $tool->stok -= $jumlah;
-            $tool->save();
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Peminjaman berhasil',
+                'data' => $peminjaman
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Terjadi kesalahan',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        DB::commit();
-
-        return redirect()->route('peminjam.index')->with('success', "Peminjaman berhasil! Kode: {$kode_pinjam}");
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        Log::error('Gagal simpan peminjaman: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-        return redirect()->back()
-            ->withInput()
-            ->with('error', $e->getMessage() ?: 'Gagal menyimpan peminjaman');
     }
-}
 
     /**
      * Display the specified resource.

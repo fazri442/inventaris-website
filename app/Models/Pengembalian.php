@@ -10,24 +10,14 @@ class Pengembalian extends Model
     use HasFactory;
     protected $table="pengembalians";
     protected $fillable = [
-        'id',
-        'kode_tool',
-        'jumlah',
+        'peminjaman_id',
+        'jumlah_dikembalikan',
         'tanggal_kembali',
-        'status',
-        'id_tim',
-        'id_tool',
     ];
     public $timestamps = true;
 
-    public function datapusat(){
-        return $this->belongsTo(Datapusat::class, 'id_tool');
-    }
-    public function tim(){
-        return $this->belongsTo(Tim::class, 'id_tim');
-    }
     public function peminjaman()
     {
-        return $this->belongsTo(Peminjaman::class, 'status', 'kode_pinjam');
+        return $this->belongsTo(Peminjaman::class, 'peminjaman_id');
     }
 }

@@ -8,6 +8,8 @@ use App\Models\Pengembalian;
 use App\Models\Peminjaman;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 class PengembalianController extends Controller
@@ -73,8 +75,51 @@ class PengembalianController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+            // 🔍 Ambil data peminjaman
+            $peminjaman = Peminjaman::findOrFail($request->peminjaman_id);
+
+            // ❗ Cegah double return
+            if ($peminjaman->status == 'dikembalikan') {
+                return response()->json([
+                    'message' => 'Barang sudah dikembalikan'
+                ], 400);
+            }
+
+            // 📝 Simpan pengembalian
+            $pengembalian = Pengembalian::create([
+                'peminjaman_id' => $peminjaman->id,
+                'jumlah_dikembalikan' => $peminjaman->jumlah,
+                'tanggal_kembali' => now(),
+            ]);
+
+            // 🔄 Update status peminjaman
+            $peminjaman->update([
+                'status' => 'dikembalikan',
+                'tanggal_kembali' => now(),
+            ]);
+
+            // ➕ Kembalikan stok
+            $tool = Datapusat::find($peminjaman->id_tool);
+            $tool->increment('stok', $peminjaman->jumlah);
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Pengembalian berhasil',
+                'data' => $pengembalian
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Terjadi kesalahan',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
+
 
     /**
      * Display the specified resource.

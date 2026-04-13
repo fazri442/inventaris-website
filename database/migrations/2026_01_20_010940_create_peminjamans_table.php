@@ -12,21 +12,23 @@ return new class extends Migration
      * @return void
      */
     public function up()
-    {
-        Schema::create('peminjamans', function (Blueprint $table) {
-            $table->id();
-            $table->string('kode_pinjam')->unique();
-            $table->date('tanggal_pinjam');
-            $table->date('tanggal_kembali');
-            $table->string('status');
-            $table->integer('jumlah');
-            $table->unsignedBigInteger('id_tim');
-            $table->unsignedBigInteger('id_tool');
-            $table->timestamps();
-            $table->foreign('id_tim')->references('id')->on('tims')->onDelete('cascade');
-            $table->foreign('id_tool')->references('id')->on('datapusats')->onDelete('cascade');
-        });
-    }
+{
+    Schema::create('peminjamans', function (Blueprint $table) {
+        $table->id();
+        $table->string('kode_pinjam')->unique();
+        $table->unsignedBigInteger('id_tim');
+        $table->unsignedBigInteger('id_tool');
+        $table->integer('jumlah');
+        $table->date('tanggal_pinjam');
+        $table->date('tanggal_rencana_kembali');
+        $table->date('tanggal_kembali')->nullable(); // real return
+        $table->enum('status', ['dipinjam', 'dikembalikan', 'terlambat']);
+        $table->timestamps();
+        $table->foreign('id_tim')->references('id')->on('tims')->onDelete('cascade');
+        $table->foreign('id_tool')->references('id')->on('datapusats')->onDelete('cascade');
+    });
+}
+
 
     /**
      * Reverse the migrations.

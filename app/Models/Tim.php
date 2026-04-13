@@ -20,6 +20,6 @@ class Tim extends Model
 
     public function peminjaman()
     {
-        return $this->hasMany(Peminjaman::class, 'id_tim', 'id');
+        return $this->hasMany(Peminjaman::class, 'id_tim');
     }
 }

@@ -7,12 +7,14 @@ use Illuminate\Http\Request;
 use App\Models\Peminjaman;
 use App\Models\Datapusat;
 use App\Models\Tim;
+use App\Models\Pengembalian;
+use Illuminate\Support\Facades\DB;
 
 class PeminjamApiController extends Controller
 {
     public function index()
     {
-        $peminjam = Peminjaman::with('tim')->get();
+        $peminjam = Peminjaman::with(['tim', 'datapusat', 'pengembalian'])->latest()->get();
         return response()->json([
             'success' => true,
             'message' => 'List of Peminjam',
@@ -23,40 +25,57 @@ class PeminjamApiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'tanggal_pinjam' => 'required|date',
-            'tanggal_kembali' => 'required|date|after_or_equal:tanggal_pinjam',
-            'jumlah' => 'required|integer|min:1',
-            'id_tool' => 'required|exists:datapusats,id',
             'id_tim' => 'required|exists:tims,id',
-        ]);
-        
-        $lastId = Peminjaman::max('id') ?? 0;
-        $kode_pinjam = 'PINJAM-' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
-
-        $pusat = Datapusat::find($request->id_tool);
-        $pusat->stok -= $request->jumlah;
-        $pusat->save();
-
-        $peminjam = Peminjaman::create([
-            'kode_pinjam' => $kode_pinjam,
-            'tanggal_pinjam' => $request->tanggal_pinjam,
-            'tanggal_kembali' => $request->tanggal_kembali,
-            'jumlah' => $request->jumlah,
-            'id_tool' => $request->id_tool,
-            'id_tim' => $request->id_tim,
-            'status' => 'Sedang Dipinjam',
+            'id_tool' => 'required|exists:datapusats,id',
+            'jumlah' => 'required|integer|min:1',
+            'tanggal_rencana_kembali' => 'required|date'
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Peminjam created successfully',
-            'data' => $peminjam,
-        ], 201);
+        DB::beginTransaction();
+        try {
+            $tool = Datapusat::findOrFail($request->id_tool);
+
+            if ($tool->stok < $request->jumlah) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Stok tidak cukup'
+                ], 400);
+            }
+
+            $peminjaman = Peminjaman::create([
+                'kode_pinjam' => 'PJM-' . time(),
+                'id_tim' => $request->id_tim,
+                'id_tool' => $request->id_tool,
+                'jumlah' => $request->jumlah,
+                'tanggal_pinjam' => now(),
+                'tanggal_rencana_kembali' => $request->tanggal_rencana_kembali,
+                'status' => 'dipinjam',
+            ]);
+
+            $tool->decrement('stok', $request->jumlah);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Peminjaman berhasil',
+                'data' => $peminjaman
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
+
 
     public function show($id)
     {
-        $peminjam = Peminjaman::with('tim')->find($id);
+        $peminjam = Peminjaman::with(['tim', 'datapusat', 'pengembalian'])->find($id);
         if (!$peminjam) {
             return response()->json([
                 'success' => false,
