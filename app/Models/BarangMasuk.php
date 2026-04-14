@@ -19,6 +19,9 @@ class BarangMasuk extends Model
         'lokasi',
         'id_tool',
     ];
+    protected $casts = [
+        'tanggal_masuk' => 'date',
+    ];
     public $timestamps = true;
 
     public function pusat(){

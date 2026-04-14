@@ -1,335 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <title>Peminjaman | Edit</title>
-    <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 10]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-      <![endif]-->
-      <!-- Meta -->
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-      <meta name="description" content="Mega Able Bootstrap admin template made using Bootstrap 4 and it has huge amount of ready made feature, UI components, pages which completely fulfills any dashboard needs." />
-      <meta name="keywords" content="bootstrap, bootstrap admin template, admin theme, admin dashboard, dashboard template, admin template, responsive" />
-      <meta name="author" content="codedthemes" />
-      <!-- Favicon icon -->
-      <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
-    <!-- Google font-->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
-    <!-- waves.css -->
-    <link rel="stylesheet" href="{{ asset ('front/pages/waves/css/waves.min.css') }}" type="text/css" media="all">
-      <!-- Required Fremwork -->
-      <link rel="stylesheet" type="text/css" href="{{ asset('front/css/bootstrap/css/bootstrap.min.css') }}">
-      <!-- waves.css -->
-      <link rel="stylesheet" href="{{asset ('front/pages/waves/css/waves.min.css') }}" type="text/css" media="all">
-      <!-- themify icon -->
-      <link rel="stylesheet" type="text/css" href="{{asset ('front/icon/themify-icons/themify-icons.css') }}">
-      <!-- Font Awesome -->
-      <link rel="stylesheet" type="text/css" href="{{asset ('front/icon/font-awesome/css/font-awesome.min.css') }}">
-      <!-- scrollbar.css -->
-      <link rel="stylesheet" type="text/css" href="{{asset ('front/css/jquery.mCustomScrollbar.css') }}">
-        <!-- am chart export.css -->
-        <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
-      <!-- Style.css -->
-      <link rel="stylesheet" type="text/css" href="{{ asset ('front/css/style.css') }}">
-  </head>
+@section('content')
+<div class="max-w-5xl mx-auto pb-10 space-y-8">
+    
+    <div class="flex items-center gap-5 p-3 bg-white border border-slate-100 rounded-full shadow-sm">
+        <a href="{{ route('peminjaman.index') }}" class="w-12 h-12 flex items-center justify-center bg-slate-100 hover:bg-amber-50 text-slate-400 hover:text-amber-600 rounded-full transition-all border border-slate-200 hover:border-amber-100 shadow-inner">
+            <i class="fa-solid fa-arrow-left text-lg"></i>
+        </a>
+        <div>
+            <h1 class="text-2xl font-black text-slate-950">Edit Data Pinjaman</h1>
+            <p class="text-xs text-slate-500 uppercase tracking-widest font-semibold ml-0.5">ID Pinjam: <span class="font-bold text-amber-600">#TRX-{{ $peminjaman->id }}</span></p>
+        </div>
+    </div>
 
-  <body>
-  <!-- Pre-loader start -->
-  <div class="theme-loader">
-      <div class="loader-track">
-          <div class="preloader-wrapper">
-              <div class="spinner-layer spinner-blue">
-                  <div class="circle-clipper left">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="gap-patch">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="circle-clipper right">
-                      <div class="circle"></div>
-                  </div>
-              </div>
-              <div class="spinner-layer spinner-red">
-                  <div class="circle-clipper left">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="gap-patch">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="circle-clipper right">
-                      <div class="circle"></div>
-                  </div>
-              </div>
-            
-              <div class="spinner-layer spinner-yellow">
-                  <div class="circle-clipper left">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="gap-patch">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="circle-clipper right">
-                      <div class="circle"></div>
-                  </div>
-              </div>
-            
-              <div class="spinner-layer spinner-green">
-                  <div class="circle-clipper left">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="gap-patch">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="circle-clipper right">
-                      <div class="circle"></div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-  <!-- Pre-loader end -->
-  <div id="pcoded" class="pcoded">
-      <div class="pcoded-overlay-box"></div>
-      <div class="pcoded-container navbar-wrapper">
-        {{-- navbar   --}}
-        @include('layouts.part.navbar')
-        {{-- navbar --}}
-            <div class="pcoded-main-container">
-              <div class="pcoded-wrapper">
-                {{-- sidiebar --}}
-                  @include('layouts.part.sidebar')
-                {{-- sidebar --}}
-                  <div class="pcoded-content">
-                      <!-- Page-header start -->
-                      <div class="page-header">
-                          <div class="page-block">
-                              <div class="row align-items-center">
-                                  <div class="col-md-8">
-                                      <div class="page-header-title">
-                                          <h5 class="m-b-10">Merubah Data</h5>
-                                          <p class="m-b-0">Halaman Merubah Data</p>
-                                      </div>
-                                  </div>
-                                  <div class="col-md-4">
-                                      <ul class="breadcrumb-title">
-                                          <li class="breadcrumb-item">
-                                              <a href="{{ route('home') }}"> <i class="fa fa-home"></i> </a>
-                                          </li>
-                                          <li class="breadcrumb-item"><a href="{{ route('peminjam.index') }}">Peminjam</a>
-                                          </li>
-                                          <li class="breadcrumb-item"><a href="#!">Rubah</a>
-                                          </li>
-                                      </ul>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        
+        <div class="lg:col-span-2 bg-white rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-100/30 overflow-hidden">
+            <div class="p-8 md:p-10">
+                <form action="{{ route('peminjaman.update', $peminjaman->id) }}" method="POST" class="space-y-6">
+                    @csrf
+                    @method('PUT')
 
-                                        <div class="card-body">
-    <form action="{{ route('peminjam.update', $peminjaman->id) }}" method="POST">
-        @csrf
-        @method('PUT')
+                    @if(session('error'))
+    <div class="p-4 mb-4 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm">
+        {{ session('error') }}
+    </div>
+@endif
 
-        @if ($errors->any() || session('error'))
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                    @if (session('error'))
-                        <li>{{ session('error') }}</li>
+
+                    @if ($errors->any())
+                        <div class="p-4 mb-6 bg-amber-50 border border-amber-100 rounded-2xl text-amber-700 text-sm">
+                            <ul class="list-disc list-inside space-y-0.5">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
                     @endif
-                </ul>
-            </div>
-        @endif
 
-        <!-- Informasi Umum (sama seperti create) -->
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Nama Peminjam</label>
-                    <select name="id_tim" class="form-control" required>
-                        <option value="">-- Pilih --</option>
-                        @foreach ($tim as $t)
-                            <option value="{{ $t->id }}" {{ old('id_tim', $peminjaman->id_tim) == $t->id ? 'selected' : '' }}>
-                                {{ $t->nama_anggota_tim }} ({{ $t->lokasi_tim }})
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label>Tanggal Pinjam</label>
-                    <input type="date" name="tanggal_pinjam" class="form-control" value="{{ old('tanggal_pinjam', $peminjaman->tanggal_pinjam) }}" required>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label>Tanggal Kembali</label>
-                    <input type="date" name="tanggal_kembali" class="form-control" value="{{ old('tanggal_kembali', $peminjaman->tanggal_kembali) }}" required>
-                </div>
-            </div>
-        </div>
+                    <div class="space-y-5">
+                        <div class="space-y-2">
+                            <label class="text-[11px] font-black text-slate-400 uppercase ml-2">Tim Peminjam</label>
+                            <select name="id_tim" class="w-full px-5 py-3.5 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:bg-white focus:border-amber-500 transition-all outline-none appearance-none font-semibold text-slate-900">
+                                @foreach ($tim as $data)
+                                    <option value="{{ $data->id }}" {{ old('id_tim', $peminjaman->id_tim) == $data->id ? 'selected' : '' }}>
+                                        {{ $data->nama_anggota_tim }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
-        <!-- Status -->
-        <div class="form-group">
-            <label>Status</label>
-            <select name="status" class="form-control">
-                <option value="Sedang Dipinjam" {{ old('status', $peminjaman->status) == 'Sedang Dipinjam' ? 'selected' : '' }}>Sedang Dipinjam</option>
-                <option value="Sudah Dikembalikan" {{ old('status', $peminjaman->status) == 'Sudah Dikembalikan' ? 'selected' : '' }}>Sudah Dikembalikan</option>
-            </select>
-        </div>
+                        <div class="space-y-2">
+                            <label class="text-[11px] font-black text-slate-400 uppercase ml-2">Barang yang Dipinjam</label>
+                            <select name="id_tool" class="w-full px-5 py-3.5 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:bg-white focus:border-amber-500 transition-all outline-none appearance-none font-semibold text-slate-900">
+                                @foreach ($datapusat as $data)
+                                    <option value="{{ $data->id }}" {{ old('id_tool', $peminjaman->id_tool) == $data->id ? 'selected' : '' }}>
+                                        {{ $data->nama_tool }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
-        <!-- Daftar Barang (Dynamic, prefill existing) -->
-        <div class="form-group mt-4">
-            <label>Daftar Tool yang Dipinjam</label>
-            <button type="button" class="btn btn-sm btn-success" id="addRow">Tambah Tool</button>
-
-            <div class="table-responsive mt-2">
-                <table class="table table-bordered" id="toolTable">
-                    <thead>
-                        <tr>
-                            <th>Nama Tool</th>
-                            <th>Jumlah</th>
-                            <th>Stok Tersedia</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($existingDetails as $index => $detail)
-                        <tr>
-                            <td>
-                                <select name="tools[{{ $index }}][id_tool]" class="form-control tool-select" required>
-                                    <option value="">-- Pilih --</option>
-                                    @foreach ($datapusat as $data)
-                                        <option value="{{ $data->id }}" data-stok="{{ $data->stok }}" {{ $detail['id_tool'] == $data->id ? 'selected' : '' }}>
-                                            {{ $data->nama_tool }} (Stok: {{ $data->stok }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <input type="number" name="tools[{{ $index }}][jumlah]" class="form-control jumlah-input" value="{{ $detail['jumlah'] }}" min="1" required>
-                            </td>
-                            <td class="stok-display text-center">{{ $detail['stok'] }}</td>
-                            <td>
-                                <button type="button" class="btn btn-sm btn-danger removeRow">Hapus</button>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary mt-3">Update Peminjaman</button>
-        <a href="{{ route('peminjam.index') }}" class="btn btn-secondary">Batal</a>
-    </form>
-</div>
-
-<!-- Script JS (salin dari create, tambah prefill stok saat load) -->
-<script>
-    let rowIndex = {{ count($existingDetails) }};
-
-    // ... script addRow, removeRow, change tool-select sama seperti create ...
-
-    // Saat load halaman, trigger change untuk tampilkan stok awal
-    $(document).ready(function() {
-        $('.tool-select').trigger('change');
-    });
-</script>
-
-
-                                </div>
-                                <div id="styleSelector"> </div>
+                        <div class="grid grid-cols-2 gap-5">
+                            <div class="space-y-2">
+                                <label class="text-[11px] font-black text-slate-400 uppercase ml-2">Jumlah</label>
+                                <input type="number" name="jumlah" value="{{ old('jumlah', $peminjaman->jumlah) }}" class="w-full px-5 py-3.5 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:bg-white focus:border-amber-500 transition-all outline-none font-bold text-lg text-slate-950">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[11px] font-black text-slate-400 uppercase ml-2">Rencana Kembali</label>
+                                <input type="date" name="tanggal_rencana_kembali" value="{{ old('tanggal_rencana_kembali', \Carbon\Carbon::parse($peminjaman->tanggal_rencana_kembali)->format('Y-m-d')) }}" class="w-full px-5 py-3.5 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:bg-white focus:border-amber-500 transition-all outline-none font-medium text-slate-900">
                             </div>
                         </div>
                     </div>
+
+                    <div class="pt-6 border-t border-slate-50 flex items-center justify-end">
+                        <button type="submit" class="px-10 py-3.5 bg-amber-500 hover:bg-amber-600 text-white rounded-2xl font-extrabold shadow-lg shadow-amber-200 transition-all flex items-center gap-2 active:scale-95">
+                            <i class="fa-solid fa-check-double text-xs"></i>
+                            Update Data Pinjaman
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm space-y-5">
+            <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
+                <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500">
+                    <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+                </div>
+                <h3 class="font-bold text-slate-900">Riwayat Pinjam</h3>
+            </div>
+            
+            <div class="space-y-3 text-sm">
+                <div class="p-3 bg-slate-50 rounded-xl">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Tanggal Pinjam:</p>
+                    <p class="font-semibold text-slate-900">{{ \Carbon\Carbon::parse($peminjaman->tanggal_pinjam)->format('d M Y') }}</p>
+                </div>
+                <div class="p-3 bg-slate-50 rounded-xl">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Status Saat Ini:</p>
+                    <span class="px-2 py-0.5 bg-amber-100 text-amber-700 rounded text-[10px] font-bold">SEDANG DIPINJAM</span>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Warning Section Starts -->
-    <!-- Older IE warning message -->
-    <!--[if lt IE 10]>
-    <div class="ie-warning">
-        <h1>Warning!!</h1>
-        <p>You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers to access this website.</p>
-        <div class="iew-container">
-            <ul class="iew-download">
-                <li>
-                    <a href="http://www.google.com/chrome/">
-                        <img src="assets/images/browser/chrome.png" alt="Chrome">
-                        <div>Chrome</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://www.mozilla.org/en-US/firefox/new/">
-                        <img src="assets/images/browser/firefox.png" alt="Firefox">
-                        <div>Firefox</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="http://www.opera.com">
-                        <img src="assets/images/browser/opera.png" alt="Opera">
-                        <div>Opera</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://www.apple.com/safari/">
-                        <img src="assets/images/browser/safari.png" alt="Safari">
-                        <div>Safari</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
-                        <img src="assets/images/browser/ie.png" alt="">
-                        <div>IE (9 & above)</div>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <p>Sorry for the inconvenience!</p>
-    </div>
-    <![endif]-->
-    <!-- Warning Section Ends -->
-    
-    <!-- Required Jquery -->
-    <script type="text/javascript" src="{{ asset ('front/js/jquery/jquery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset ('front/js/jquery-ui/jquery-ui.min.js') }} "></script>
-    <script type="text/javascript" src="{{ asset ('front/js/popper.js/popper.min.js') }}"></script>
-    <script type="text/javascript" src="{{asset ('front/js/bootstrap/js/bootstrap.min.js') }} "></script>
-    <script type="text/javascript" src="{{asset ('front/pages/widget/excanvas.js') }} "></script>
-    <!-- waves js -->
-    <script src="{{ asset ('front/pages/waves/js/waves.min.js') }}"></script>
-    <!-- jquery slimscroll js -->
-    <script type="text/javascript" src="{{ asset ('front/js/jquery-slimscroll/jquery.slimscroll.js') }} "></script>
-    <!-- modernizr js -->
-    <script type="text/javascript" src="{{ asset ('front/js/modernizr/modernizr.js') }} "></script>
-    <!-- slimscroll js -->
-    <script type="text/javascript" src="{{ asset ('front/js/SmoothScroll.js') }}"></script>
-    <script src="{{ asset('front/js/jquery.mCustomScrollbar.concat.min.js') }} "></script>
-    <!-- Chart js -->
-    <script type="text/javascript" src="{{ asset ('front/js/chart.js/Chart.js') }}"></script>
-    <!-- amchart js -->
-    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
-    <script src="{{ asset('front/pages/widget/amchart/gauge.js') }}"></script>
-    <script src="{{ asset('front/pages/widget/amchart/serial.js') }}"></script>
-    <script src="{{ asset('front/pages/widget/amchart/light.js') }}"></script>
-    <script src="{{ asset('front/pages/widget/amchart/pie.min.js') }}"></script>
-    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
-    <!-- menu js -->
-    <script src="{{ asset('front/js/pcoded.min.js') }}"></script>
-    <script src="{{ asset('front/js/vertical-layout.min.js') }} "></script>
-    <!-- custom js -->
-    <script type="text/javascript" src="{{ asset ('front/pages/dashboard/custom-dashboard.js') }}"></script>
-    <script type="text/javascript" src="{{ asset ('front/js/script.js') }} "></script>
-</body>
-
-</html>
+</div>
+@endsection

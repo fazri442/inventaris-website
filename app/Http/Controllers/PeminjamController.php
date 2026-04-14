@@ -35,26 +35,22 @@ class PeminjamController extends Controller
         $tanggalAkhir = $request->input('tanggal_kembali');
 
         if (!$tanggalAwal || !$tanggalAkhir) {
-            $pinjam = Peminjaman::where('status', 'Sedang Dipinjam')->get();
+            $peminjaman = Peminjaman::where('status', 'Sedang Dipinjam')->get();
         } else {
-            $pinjam = Peminjaman::where('status', 'Sedang Dipinjam')
+            $peminjaman = Peminjaman::where('status', 'Sedang Dipinjam')
                 ->whereBetween('tanggal_pinjam', [$tanggalAwal, $tanggalAkhir])
                 ->get();
             }
 
-            foreach ($pinjam as $data) {
+            foreach ($peminjaman as $data) {
                 $data->formatted_tanggal_pinjam = Carbon::parse($data->tanggal_pinjam)->translatedFormat('l, d F Y');
                 $data->formatted_tanggal_kembali = Carbon::parse($data->tanggal_kembali)->translatedFormat('l, d F Y');
             }
 
-            $detail = DetailPeminjaman::all();
             $tim = Tim::all();
-            $pengembalian = Pengembalian::with(['peminjaman.pinjam'])  // load peminjaman + tim
-                ->get();  // atau query lain sesuai kebutuhan
-
-            // atau kalau view langsung pakai $pinjam dari Peminjaman:
-            $pinjam = Peminjaman::with(['tim', 'datapusat', 'pengembalian'])->get();
-            return view('peminjam.index');
+            $pengembalian = Pengembalian::with(['peminjaman'])->get();
+            $peminjaman = Peminjaman::with(['tim','datapusat','pengembalian'])->get();
+            return view('peminjam.index', compact('tim','pengembalian','peminjaman'));
     }
 
     public function export()
@@ -127,6 +123,7 @@ class PeminjamController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+        return view('peminjam.index', compact('peminjaman', 'datapusat', 'tim'));
     }
 
     /**
@@ -147,23 +144,13 @@ class PeminjamController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-{
-    $peminjaman = Peminjaman::with('detail.tool')->findOrFail($id);  // load detail + tool
-    $datapusat = Datapusat::where('stok', '>', 0)->get();  // tool yang ada stok
-    $tim = Tim::all();
+    {
+        $peminjaman = Peminjaman::with(['tim', 'datapusat'])->findOrFail($id);
+        $datapusat = Datapusat::where('stok', '>', 0)->get();
+        $tim = Tim::all();
+        return view('peminjam.edit', compact('peminjaman','datapusat','tim'));
+    }
 
-    // Pre-fill data untuk dynamic row (jika ingin edit detail)
-    $existingDetails = $peminjaman->detail->map(function ($detail) {
-        return [
-            'id_tool' => $detail->id_tool,
-            'jumlah' => $detail->jumlah,
-            'nama_tool' => $detail->tool->nama_tool ?? 'Unknown',
-            'stok' => $detail->tool->stok ?? 0,
-        ];
-    })->toArray();
-
-    return view('peminjam.edit', compact('peminjaman', 'datapusat', 'tim', 'existingDetails'));
-}
 
     /**
      * Update the specified resource in storage.
@@ -173,87 +160,54 @@ class PeminjamController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-{
-    $validated = $request->validate([
-        'id_tim'    => 'required|exists:tims,id',
-        'tanggal_pinjam'   => 'required|date',
-        'tanggal_kembali'  => 'required|date|after_or_equal:tanggal_pinjam',
-        'status'           => 'required|in:Sedang Dipinjam,Sudah Dikembalikan',
-        'tools'            => 'required|array|min:1',
-        'tools.*.id_tool'  => 'required|exists:datapusats,id|distinct',
-        'tools.*.jumlah'   => 'required|integer|min:1',
-    ]);
-
-    try {
-        DB::beginTransaction();
-
-        $peminjaman = Peminjaman::with('detail.tool')->findOrFail($id);
-
-        // 1. Handle status kembali (kembalikan stok semua detail lama)
-        if ($request->status === 'Sudah Dikembalikan' && $peminjaman->status !== 'Sudah Dikembalikan') {
-            foreach ($peminjaman->detail as $detail) {
-                $tool = $detail->tool;
-                if ($tool) {
-                    $tool->stok += $detail->jumlah;
-                    $tool->save();
-                }
-            }
-            // Hapus detail lama (opsional, atau biarkan untuk history)
-            // $peminjaman->details()->delete();
-        }
-
-        // 2. Handle perubahan detail (hanya jika status masih dipinjam)
-        if ($request->status === 'Sedang Dipinjam') {
-            // Kembalikan stok semua detail lama
-            foreach ($peminjaman->detail as $detail) {
-                $tool = $detail->tool;
-                if ($tool) {
-                    $tool->stok += $detail->jumlah;
-                    $tool->save();
-                }
-            }
-            $peminjaman->detail()->delete();  // hapus detail lama
-
-            // Tambah detail baru + kurangi stok
-            foreach ($validated['tools'] as $item) {
-                $tool = Datapusat::findOrFail($item['id_tool']);
-                $jumlah = (int) $item['jumlah'];
-
-                if ($tool->stok < $jumlah) {
-                    throw new \Exception("Stok {$tool->nama_tool} tidak cukup. Tersisa: {$tool->stok}");
-                }
-
-                DetailPeminjaman::create([
-                    'id_peminjaman' => $peminjaman->id,
-                    'id_tool'       => $tool->id,
-                    'jumlah'        => $jumlah,
-                ]);
-
-                $tool->stok -= $jumlah;
-                $tool->save();
-            }
-        }
-
-        // 3. Update header
-        $peminjaman->update([
-            'id_tim'   => $request->id_tim,
-            'tanggal_pinjam'  => $request->tanggal_pinjam,
-            'tanggal_kembali' => $request->tanggal_kembali,
-            'status'          => $request->status,
+    {
+        $request->validate([
+            'id_tim' => 'required|exists:tims,id',
+            'id_tool' => 'required|exists:datapusats,id',
+            'jumlah' => 'required|integer|min:1',
+            'tanggal_rencana_kembali' => 'required|date',
         ]);
 
-        DB::commit();
+        DB::beginTransaction();
+        try {
+            $peminjaman = Peminjaman::findOrFail($id);
 
-        return redirect()->route('peminjam.index')
-            ->with('success', 'Peminjaman berhasil diperbarui');
+            $toolLama = Datapusat::find($peminjaman->id_tool);
+            $toolBaru = Datapusat::find($request->id_tool);
 
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return redirect()->back()
-            ->withInput()
-            ->with('error', $e->getMessage() ?: 'Gagal memperbarui peminjaman');
+            // 🔁 Kembalikan stok lama
+            $toolLama->increment('stok', $peminjaman->jumlah);
+
+            // ❗ Cek stok baru
+            if ($toolBaru->stok < $request->jumlah) {
+                throw new \Exception("Stok tidak mencukupi");
+            }
+
+            // ➖ Kurangi stok baru
+            $toolBaru->decrement('stok', $request->jumlah);
+
+            // 🔄 Update data
+            $peminjaman->update([
+                'id_tim' => $request->id_tim,
+                'id_tool' => $request->id_tool,
+                'jumlah' => $request->jumlah,
+                'tanggal_rencana_kembali' => $request->tanggal_rencana_kembali,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('peminjaman.index')
+                ->with('success', 'Data berhasil diupdate');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+        }
     }
-}
+
         
 
     /**

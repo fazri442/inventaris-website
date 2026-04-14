@@ -3,22 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\DataPusat;
+use App\Models\Datapusat;
 use App\Models\Pengembalian;
 use App\Models\Peminjaman;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 class PengembalianController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function __construct()
     {
         $this->middleware('auth');
@@ -29,62 +22,52 @@ class PengembalianController extends Controller
         $tanggalAwal = $request->input('tanggal_pinjam');
         $tanggalAkhir = $request->input('tanggal_kembali');
 
-        if (!$tanggalAwal || !$tanggalAkhir) {
-            $kembali = Peminjaman::where('status', 'Sudah Dikembalikan')->get();
-        } else {
-            $kembali = Peminjaman::where('status', 'Sudah Dikembalikan')
-                ->whereBetween('tanggal_kembali', [$tanggalAwal, $tanggalAkhir])
-                ->get();
+        // 🔥 Ambil data peminjaman yang sudah dikembalikan
+        $query = Peminjaman::with(['tim', 'tool'])
+                    ->where('status', 'dikembalikan');
+
+        if ($tanggalAwal && $tanggalAkhir) {
+            $query->whereBetween('tanggal_kembali', [$tanggalAwal, $tanggalAkhir]);
         }
 
+        $kembali = $query->get();
+
+        // Format tanggal
         foreach ($kembali as $data) {
-            $data->formatted_tanggal = Carbon::parse($data->tanggal_kembali)->translatedFormat('l, d F Y');
+            $data->formatted_tanggal = Carbon::parse($data->tanggal_kembali)
+                ->translatedFormat('l, d F Y');
         }
-        $peminjam = Peminjaman::with(['pengembalian.datapusat'])  // load peminjaman + tim
-                ->get();  // atau query lain sesuai kebutuhan
 
-            // atau kalau view langsung pakai $pinjam dari Peminjaman:
-            $pengembalian = Pengembalian::with('datapusat')->where('status', 'Sudah Dikembalikan')->get();
-        return view('pengembalian.index', compact('kembali', 'peminjam', 'pengembalian'));
+        // 🔥 Data pengembalian (relasi ke peminjaman)
+        $pengembalian = Pengembalian::with([
+            'peminjaman.tim',
+            'peminjaman.tool'
+        ])->get();
+
+        return view('pengembalian.index', compact('kembali', 'pengembalian'));
     }
 
     public function export()
     {
-        
-    $data = DataPusat::all();
+        $data = Datapusat::all();
 
-    $pdf = Pdf::loadView('datapusat.datapusat_pdf', ['data' => $data]);
-    return $pdf->download('laporan-data-pusat.pdf');
+        $pdf = PDF::loadView('datapusat.datapusat_pdf', ['data' => $data]);
+        return $pdf->download('laporan-data-pusat.pdf');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
+        $request->validate([
+            'peminjaman_id' => 'required|exists:peminjamans,id',
+        ]);
+
         DB::beginTransaction();
         try {
-            // 🔍 Ambil data peminjaman
             $peminjaman = Peminjaman::findOrFail($request->peminjaman_id);
 
             // ❗ Cegah double return
             if ($peminjaman->status == 'dikembalikan') {
-                return response()->json([
-                    'message' => 'Barang sudah dikembalikan'
-                ], 400);
+                return redirect()->back()->with('error', 'Barang sudah dikembalikan');
             }
 
             // 📝 Simpan pengembalian
@@ -94,7 +77,7 @@ class PengembalianController extends Controller
                 'tanggal_kembali' => now(),
             ]);
 
-            // 🔄 Update status peminjaman
+            // 🔄 Update peminjaman
             $peminjaman->update([
                 'status' => 'dikembalikan',
                 'tanggal_kembali' => now(),
@@ -106,65 +89,22 @@ class PengembalianController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'message' => 'Pengembalian berhasil',
-                'data' => $pengembalian
-            ]);
+            return redirect()->route('pengembalian.index')
+                ->with('success', 'Pengembalian berhasil');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Terjadi kesalahan',
-                'error' => $e->getMessage()
-            ], 500);
+
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Peminjaman $pengembalian)
+    public function destroy(Pengembalian $pengembalian)
     {
         $pengembalian->delete();
-        session()->flash('success', 'Data Berhasil Dihapus');
-        return redirect()->route('pengembalian.index');
+
+        return redirect()->route('pengembalian.index')
+            ->with('success', 'Data berhasil dihapus');
     }
 }

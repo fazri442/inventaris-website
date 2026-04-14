@@ -19,6 +19,9 @@ class Barangkeluar extends Model
         'lokasi',
         'id_tool',
     ];
+    protected $casts = [
+        'tanggal_keluar' => 'date',
+    ];
     public $timestamps = true;
 
     public function pusat(){

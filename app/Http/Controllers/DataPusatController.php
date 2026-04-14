@@ -118,38 +118,47 @@ class DataPusatController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $notif = $request->validate([
+        $data = Datapusat::findOrFail($id);
+
+        $request->validate([
             'nama_tool' => 'required',
-            'foto' => 'required',
-            'stok' => 'required',
+            'foto'      => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Diganti jadi nullable
+            'stok'      => 'required',
             'deskripsi' => 'required',
-            'lokasi' => 'required'
+            'lokasi'    => 'required'
         ],
         [
-            'nama_tool.required' => 'Nama Tool Belum Diisi Kembali',
-            'foto.required' => 'Foto Belum Di pilih Kembali',
-            'stok.required' => 'Stok Belum Dimasukan Kembali',
-            'deskripsi.required' => 'Deskripsi Belum Dimasukan Kembali',
-            'lokasi.required' => 'Lokasi Belum Dimasukan Kembali',
+            'nama_tool.required' => 'Nama Tool wajib diisi',
+            'stok.required'      => 'Stok wajib diisi',
+            'deskripsi.required' => 'Deskripsi wajib diisi',
+            'lokasi.required'    => 'Lokasi wajib diisi',
+            // Pesan foto.required dihapus karena sudah tidak wajib
         ]);
-        $data = Datapusat::findOrFail($id);
-        $data->nama_tool = $request->nama_tool;
-        $data->foto = $request->foto;
-        $data->stok = $request->stok;
-        $data->deskripsi = $request->deskripsi;
-        $data->lokasi = $request->lokasi;
 
-            if($request->hasFile('foto')){
-            $data->deleteImage();
+        // Update data teks
+        $data->nama_tool = $request->nama_tool;
+        $data->stok      = $request->stok;
+        $data->deskripsi = $request->deskripsi;
+        $data->lokasi    = $request->lokasi;
+
+        // Logika Foto: Hanya jalankan jika user upload file baru
+        if($request->hasFile('foto')){
+            // 1. Hapus foto lama dari folder (pake method yang sudah kamu buat)
+            $data->deleteImage(); 
+            
+            // 2. Upload foto baru
             $img = $request->file('foto');
             $name = rand(1000,9999) . $img->getClientOriginalName();
             $img->move('images/dp_foto', $name);
+            
+            // 3. Masukkan nama file baru ke database
             $data->foto = $name;
         }
-        $data->save() ;
 
-        return redirect()->route('datapusat.index')->with('success', 'Data berhasil Dirubah');
-    }
+        $data->save();
+
+        return redirect()->route('datapusat.index')->with('success', 'Data berhasil dirubah');
+}
 
     /**
      * Remove the specified resource from storage.

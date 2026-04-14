@@ -47,9 +47,9 @@ class BarangkeluarController extends Controller
     public function create()
     {
         $barangkeluar = Barangkeluar::all();
-        $pusat = Datapusat::all();
+        $datapusat = Datapusat::all();
         $tim = Tim::all();
-        return view('keluar.create', compact('barangkeluar', 'pusat', 'tim'));
+        return view('keluar.create', compact('barangkeluar', 'datapusat', 'tim'));
     }
 
     /**

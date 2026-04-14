@@ -1,251 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <title>Mega Able bootstrap admin template by codedthemes </title>
-    <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 10]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-      <![endif]-->
-      <!-- Meta -->
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-      <meta name="description" content="Mega Able Bootstrap admin template made using Bootstrap 4 and it has huge amount of ready made feature, UI components, pages which completely fulfills any dashboard needs." />
-      <meta name="keywords" content="bootstrap, bootstrap admin template, admin theme, admin dashboard, dashboard template, admin template, responsive" />
-      <meta name="author" content="codedthemes" />
-      <!-- Favicon icon -->
-      <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
-    <!-- Google font-->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
-    <!-- waves.css -->
-    <link rel="stylesheet" href="{{ asset ('front/pages/waves/css/waves.min.css') }}" type="text/css" media="all">
-      <!-- Required Fremwork -->
-      <link rel="stylesheet" type="text/css" href="{{ asset('front/css/bootstrap/css/bootstrap.min.css') }}">
-      <!-- waves.css -->
-      <link rel="stylesheet" href="{{asset ('front/pages/waves/css/waves.min.css') }}" type="text/css" media="all">
-      <!-- themify icon -->
-      <link rel="stylesheet" type="text/css" href="{{asset ('front/icon/themify-icons/themify-icons.css') }}">
-      <!-- Font Awesome -->
-      <link rel="stylesheet" type="text/css" href="{{asset ('front/icon/font-awesome/css/font-awesome.min.css') }}">
-      <!-- scrollbar.css -->
-      <link rel="stylesheet" type="text/css" href="{{asset ('front/css/jquery.mCustomScrollbar.css') }}">
-        <!-- am chart export.css -->
-        <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
-      <!-- Style.css -->
-      <link rel="stylesheet" type="text/css" href="{{ asset ('front/css/style.css') }}">
-  </head>
+@section('content')
+<div class="max-w-4xl mx-auto space-y-6">
+    <div class="flex items-center gap-4 mb-8">
+        <a href="{{ route('tim.index') }}" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-blue-600 hover:border-blue-100 transition-all">
+            <i class="fa-solid fa-arrow-left text-sm"></i>
+        </a>
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900">Edit Data Tim</h1>
+            <p class="text-sm text-slate-500">Perbarui informasi untuk: <span class="font-bold text-blue-600">{{ $tim->nama_anggota_tim }}</span></p>
+        </div>
+    </div>
 
-  <body>
-  <!-- Pre-loader start -->
-  <div class="theme-loader">
-      <div class="loader-track">
-          <div class="preloader-wrapper">
-              <div class="spinner-layer spinner-blue">
-                  <div class="circle-clipper left">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="gap-patch">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="circle-clipper right">
-                      <div class="circle"></div>
-                  </div>
-              </div>
-              <div class="spinner-layer spinner-red">
-                  <div class="circle-clipper left">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="gap-patch">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="circle-clipper right">
-                      <div class="circle"></div>
-                  </div>
-              </div>
-            
-              <div class="spinner-layer spinner-yellow">
-                  <div class="circle-clipper left">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="gap-patch">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="circle-clipper right">
-                      <div class="circle"></div>
-                  </div>
-              </div>
-            
-              <div class="spinner-layer spinner-green">
-                  <div class="circle-clipper left">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="gap-patch">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="circle-clipper right">
-                      <div class="circle"></div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-  <!-- Pre-loader end -->
-  <div id="pcoded" class="pcoded">
-      <div class="pcoded-overlay-box"></div>
-      <div class="pcoded-container navbar-wrapper">
-        {{-- navbar   --}}
-        @include('layouts.part.navbar')
-        {{-- navbar --}}
-            <div class="pcoded-main-container">
-              <div class="pcoded-wrapper">
-                {{-- sidiebar --}}
-                  @include('layouts.part.sidebar')
-                {{-- sidebar --}}
-                  <div class="pcoded-content">
-                      <!-- Page-header start -->
-                      <div class="page-header">
-                          <div class="page-block">
-                              <div class="row align-items-center">
-                                  <div class="col-md-8">
-                                      <div class="page-header-title">
-                                          <h5 class="m-b-10">Dashboard</h5>
-                                          <p class="m-b-0">Welcome to Mega Able</p>
-                                      </div>
-                                  </div>
-                                  <div class="col-md-4">
-                                      <ul class="breadcrumb-title">
-                                          <li class="breadcrumb-item">
-                                              <a href="{{ route('home') }}"> <i class="fa fa-home"></i> </a>
-                                          </li>
-                                          <li class="breadcrumb-item"><a href="#!">Dashboard</a>
-                                          </li>
-                                      </ul>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
+    <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
+        <div class="p-8 md:p-12">
+            <form action="{{ route('tim.update', $tim->id) }}" method="POST" class="space-y-6">
+                @csrf
+                @method('PUT')
 
-                                        <div class="card-body">
-                                            <form action="{{ route('tim.update', $tim->id ) }}" method="post" enctype="multipart/form-data">
-                                                @csrf
-                                                @method('PUT')
-                                                @if ($errors->any())
-                                                    <div class="alert alert-danger">
-                                                        <ul>
-                                                            @foreach ($errors->all() as $error)
-                                                                <li>{{ $error }}</li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                @endif
-                                                <div class="form-group">
-                                                    <label class="col-sm-12 col-form-label">Nama Anggota</label>
-                                                    <input type="text" class="form-control" value="{{ $tim->nama_anggota_tim }}" name="nama_anggota_tim">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-sm-12 col-form-label">Pemimpin Tim</label>
-                                                    <input type="text" class="form-control" value="{{ $tim->pemimpin_tim }}" name="pemimpin_tim">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-sm-12 col-form-label">Lokasi</label>
-                                                    <input type="text" class="form-control" value="{{ $tim->lokasi_tim }}" name="lokasi_tim">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-sm-12 col-form-label">Kontak</label>
-                                                    <input type="text" class="form-control" value="{{ $tim->kontak_tim }}" name="kontak_tim">
-                                                </div>
-                                                <button type="submit" class="btn btn-primary">Rubah</button>
-                                            </form>
-                                        </div>
+                @if ($errors->any())
+                    <div class="p-4 mb-6 bg-rose-50 border border-rose-100 rounded-2xl">
+                        <div class="flex items-center gap-3 mb-2 text-rose-600">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            <span class="font-bold text-sm">Terjadi kesalahan:</span>
+                        </div>
+                        <ul class="list-disc list-inside text-xs text-rose-500 space-y-1 ml-7">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-
-                                </div>
-                                <div id="styleSelector"> </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Nama Anggota/Tim</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-500 transition-colors">
+                                <i class="fa-solid fa-users text-sm"></i>
                             </div>
+                            <input type="text" name="nama_anggota_tim" value="{{ old('nama_anggota_tim', $tim->nama_anggota_tim) }}" 
+                                class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-100 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-blue-50 focus:border-blue-400 focus:bg-white transition-all outline-none">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Pemimpin Tim</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-500 transition-colors">
+                                <i class="fa-solid fa-user-tie text-sm"></i>
+                            </div>
+                            <input type="text" name="pemimpin_tim" value="{{ old('pemimpin_tim', $tim->pemimpin_tim) }}" 
+                                class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-100 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-blue-50 focus:border-blue-400 focus:bg-white transition-all outline-none">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Lokasi Kerja</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-500 transition-colors">
+                                <i class="fa-solid fa-map-location-dot text-sm"></i>
+                            </div>
+                            <input type="text" name="lokasi_tim" value="{{ old('lokasi_tim', $tim->lokasi_tim) }}" 
+                                class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-100 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-blue-50 focus:border-blue-400 focus:bg-white transition-all outline-none">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Kontak / WhatsApp</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-500 transition-colors">
+                                <i class="fa-solid fa-phone text-sm"></i>
+                            </div>
+                            <input type="text" name="kontak_tim" value="{{ old('kontak_tim', $tim->kontak_tim) }}" 
+                                class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-100 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-blue-50 focus:border-blue-400 focus:bg-white transition-all outline-none">
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <!-- Warning Section Starts -->
-    <!-- Older IE warning message -->
-    <!--[if lt IE 10]>
-    <div class="ie-warning">
-        <h1>Warning!!</h1>
-        <p>You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers to access this website.</p>
-        <div class="iew-container">
-            <ul class="iew-download">
-                <li>
-                    <a href="http://www.google.com/chrome/">
-                        <img src="assets/images/browser/chrome.png" alt="Chrome">
-                        <div>Chrome</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://www.mozilla.org/en-US/firefox/new/">
-                        <img src="assets/images/browser/firefox.png" alt="Firefox">
-                        <div>Firefox</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="http://www.opera.com">
-                        <img src="assets/images/browser/opera.png" alt="Opera">
-                        <div>Opera</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://www.apple.com/safari/">
-                        <img src="assets/images/browser/safari.png" alt="Safari">
-                        <div>Safari</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
-                        <img src="assets/images/browser/ie.png" alt="">
-                        <div>IE (9 & above)</div>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <p>Sorry for the inconvenience!</p>
-    </div>
-    <![endif]-->
-    <!-- Warning Section Ends -->
-    
-    <!-- Required Jquery -->
-    <script type="text/javascript" src="{{ asset ('front/js/jquery/jquery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset ('front/js/jquery-ui/jquery-ui.min.js') }} "></script>
-    <script type="text/javascript" src="{{ asset ('front/js/popper.js/popper.min.js') }}"></script>
-    <script type="text/javascript" src="{{asset ('front/js/bootstrap/js/bootstrap.min.js') }} "></script>
-    <script type="text/javascript" src="{{asset ('front/pages/widget/excanvas.js') }} "></script>
-    <!-- waves js -->
-    <script src="{{ asset ('front/pages/waves/js/waves.min.js') }}"></script>
-    <!-- jquery slimscroll js -->
-    <script type="text/javascript" src="{{ asset ('front/js/jquery-slimscroll/jquery.slimscroll.js') }} "></script>
-    <!-- modernizr js -->
-    <script type="text/javascript" src="{{ asset ('front/js/modernizr/modernizr.js') }} "></script>
-    <!-- slimscroll js -->
-    <script type="text/javascript" src="{{ asset ('front/js/SmoothScroll.js') }}"></script>
-    <script src="{{ asset('front/js/jquery.mCustomScrollbar.concat.min.js') }} "></script>
-    <!-- Chart js -->
-    <script type="text/javascript" src="{{ asset ('front/js/chart.js/Chart.js') }}"></script>
-    <!-- amchart js -->
-    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
-    <script src="{{ asset('front/pages/widget/amchart/gauge.js') }}"></script>
-    <script src="{{ asset('front/pages/widget/amchart/serial.js') }}"></script>
-    <script src="{{ asset('front/pages/widget/amchart/light.js') }}"></script>
-    <script src="{{ asset('front/pages/widget/amchart/pie.min.js') }}"></script>
-    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
-    <!-- menu js -->
-    <script src="{{ asset('front/js/pcoded.min.js') }}"></script>
-    <script src="{{ asset('front/js/vertical-layout.min.js') }} "></script>
-    <!-- custom js -->
-    <script type="text/javascript" src="{{ asset ('front/pages/dashboard/custom-dashboard.js') }}"></script>
-    <script type="text/javascript" src="{{ asset ('front/js/script.js') }} "></script>
-</body>
 
-</html>
+                <div class="pt-8 border-t border-slate-50 flex items-center justify-end gap-3">
+                    <a href="{{ route('tim.index') }}" class="px-6 py-3 text-sm font-bold text-slate-400 hover:text-slate-600 transition-colors">
+                        Batal
+                    </a>
+                    <button type="submit" class="px-8 py-3.5 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all flex items-center gap-2 active:scale-95">
+                        <i class="fa-solid fa-floppy-disk text-xs"></i>
+                        Simpan Perubahan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endsection

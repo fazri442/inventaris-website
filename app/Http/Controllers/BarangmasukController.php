@@ -119,8 +119,9 @@ class BarangmasukController extends Controller
     public function edit($id)
     {
         $barangmasuk = BarangMasuk::findorfail($id);
+        $tim = Tim::all();
         $datapusat = Datapusat::all();
-        return view('masuk.edit', compact('barangmasuk', 'datapusat'));
+        return view('masuk.edit', compact('barangmasuk', 'datapusat', 'tim'));
     }
 
     /**

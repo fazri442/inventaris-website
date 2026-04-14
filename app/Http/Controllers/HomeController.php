@@ -28,24 +28,40 @@ class HomeController extends Controller
     $totalPeminjamanGlobal = \App\Models\Peminjaman::count();
     
     // Ambil semua tim dengan hitungan relasi
-    $timStats = \App\Models\Tim::withCount(['peminjaman', 'pengembalian'])
-                ->get()
-                ->map(function($tim) use ($totalPeminjamanGlobal) {
-                    // Persentase peminjaman tim terhadap total peminjaman global
-                    $persenPinjam = $totalPeminjamanGlobal > 0 ? ($tim->peminjaman_count / $totalPeminjamanGlobal) * 100 : 0;
-                    
-                    // Rasio pengembalian tim itu sendiri (berapa yang sudah balik dari yang mereka pinjam)
-                    // Jika pinjam 10, balik 10, maka 100%
-                    $rasioKembali = $tim->peminjaman_count > 0 ? ($tim->pengembalian_count / $tim->peminjaman_count) * 100 : 0;
+    $timStats = \App\Models\Tim::withCount([
+        'peminjaman',
+        'peminjaman as pengembalian_count' => function ($query) {
+            $query->where('status', 'dikembalikan');
+        }
+    ])
+    ->get()
+    ->map(function($tim) use ($totalPeminjamanGlobal) {
 
-                    return [
-                        'nama' => $tim->nama_anggota_tim,
-                        'total_pinjam' => $tim->peminjaman_count,
-                        'total_kembali' => $tim->pengembalian_count,
-                        'persen_pinjam' => round($persenPinjam, 1),
-                        'persen_kembali' => round($rasioKembali, 1),
-                    ];
-                })->sortByDesc('total_pinjam')->take(5);
+        // ✅ ambil value yang benar
+        $totalPinjam = $tim->peminjamans_count;
+        $totalKembali = $tim->pengembalian_count;
+
+        // 📊 Persentase terhadap global
+        $persenPinjam = $totalPeminjamanGlobal > 0 
+            ? ($totalPinjam / $totalPeminjamanGlobal) * 100 
+            : 0;
+
+        // 📊 Rasio pengembalian per tim
+        $rasioKembali = $totalPinjam > 0 
+            ? ($totalKembali / $totalPinjam) * 100 
+            : 0;
+
+        return [
+            'nama' => $tim->nama_anggota_tim,
+            'total_pinjam' => $totalPinjam,
+            'total_kembali' => $totalKembali,
+            'persen_pinjam' => round($persenPinjam, 1),
+            'persen_kembali' => round($rasioKembali, 1),
+        ];
+    })
+    ->sortByDesc('total_pinjam')
+    ->take(5)
+    ->values(); // biar index rapi
 
     return view('home', compact('barang', 'timStats'));
 }

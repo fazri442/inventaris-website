@@ -31,18 +31,18 @@
                 </thead>
                 <tbody class="divide-y divide-slate-50">
                     @php $no = 1; @endphp
-                    @forelse ($pinjam as $data)
+                    @forelse ($peminjaman as $data)
                     <tr class="hover:bg-slate-50/80 transition-colors group">
                         <td class="px-6 py-4 text-sm text-slate-600 font-medium">{{ $no++ }}</td>
                         <td class="px-6 py-4">
                             <div class="flex flex-col">
-                                <span class="text-sm font-bold text-slate-900">{{ $data->nama_peminjam }}</span>
-                                <span class="text-[11px] text-slate-400">{{ $data->nama_tim }}</span>
+                                <span class="text-sm font-bold text-slate-900">{{ $data->tim->nama_anggota_tim }}</span>
+                                <span class="text-[11px] text-slate-400">{{ $data->kode_pinjam }}</span>
                             </div>
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-2">
-                                <span class="text-sm text-slate-700 font-medium">{{ $data->pusat->nama_tool }}</span>
+                                <span class="text-sm text-slate-700 font-medium">{{ $data->datapusat->nama_tool }}</span>
                                 <span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-[10px] font-bold">{{ $data->jumlah }}x</span>
                             </div>
                         </td>
@@ -61,18 +61,40 @@
                             @endif
                         </td>
                         <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <a href="{{ route('peminjaman.edit', $data->id) }}" class="w-8 h-8 flex items-center justify-center bg-slate-100 text-slate-500 rounded-lg hover:bg-blue-600 hover:text-white transition-all">
-                                    <i class="fa-solid fa-pen-to-square text-[12px]"></i>
-                                </a>
-                                <form action="{{ route('peminjaman.destroy', $data->id) }}" method="POST" class="inline">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Hapus data?')" class="w-8 h-8 flex items-center justify-center bg-slate-100 text-slate-500 rounded-lg hover:bg-rose-600 hover:text-white transition-all">
-                                        <i class="fa-solid fa-trash text-[12px]"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
+                        <div class="flex items-center justify-center gap-2">
+
+                            {{-- ✅ Tombol Kembalikan --}}
+                            @if($data->status == 'dipinjam')
+                            <form action="{{ route('pengembalian.store') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="peminjaman_id" value="{{ $data->id }}">
+                                <button type="submit"
+                                    onclick="return confirm('Kembalikan barang ini?')"
+                                    class="w-32 h-10 flex items-center justify-center bg-green-100 text-green-600 rounded-lg hover:bg-green-600 hover:text-white transition-all">
+                                    Kembalikan<i class="fa-solid fa-rotate-left text-[12px]"></i>
+                                </button>
+                            </form>
+                            @endif
+
+                            {{-- Edit --}}
+                            <a href="{{ route('peminjaman.edit', $data->id) }}"
+                            class="w-8 h-8 flex items-center justify-center bg-slate-100 text-slate-500 rounded-lg hover:bg-blue-600 hover:text-white transition-all">
+                                <i class="fa-solid fa-pen-to-square text-[12px]"></i>
+                            </a>
+
+                            {{-- Delete --}}
+                            <form action="{{ route('peminjaman.destroy', $data->id) }}" method="POST" class="inline">
+                                @csrf @method('DELETE')
+                                <button type="submit"
+                                    onclick="return confirm('Hapus data?')"
+                                    class="w-8 h-8 flex items-center justify-center bg-slate-100 text-slate-500 rounded-lg hover:bg-rose-600 hover:text-white transition-all">
+                                    <i class="fa-solid fa-trash text-[12px]"></i>
+                                </button>
+                            </form>
+
+                        </div>
+                    </td>
+
                     </tr>
                     @empty
                     <tr>
