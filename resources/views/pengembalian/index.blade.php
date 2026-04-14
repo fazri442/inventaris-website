@@ -19,7 +19,7 @@
             <div>
                 <p class="text-slate-400 text-xs font-medium uppercase tracking-widest">Terakhir Kembali</p>
                 <h3 class="text-xl font-bold text-slate-700">
-                    {{ $pengembalian->last()->nama_tool ?? '-' }}
+                    {{ $pengembalian->last()->peminjaman->datapusat->nama_tool ?? '-' }}
                 </h3>
             </div>
             <i class="fa-solid fa-clock-rotate-left text-4xl text-slate-100"></i>

@@ -56,7 +56,7 @@
             </button>
         </form>
 
-        <div class="relative my-8 text-center">
+        {{-- <div class="relative my-8 text-center">
             <hr class="border-t border-dotted border-gray-300">
             <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-4 text-xs text-gray-400 uppercase tracking-widest">
                 Atau masuk dengan
@@ -68,7 +68,7 @@
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="h-6 w-6" alt="Google">
                 <span>Lanjutkan dengan Google</span>
             </a>
-        </div>
+        </div> --}}
 
         <p class="text-center mt-8 text-gray-500 text-sm">
             Belum punya akun? 

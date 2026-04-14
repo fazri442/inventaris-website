@@ -14,7 +14,11 @@ class PengembalianApiController extends Controller
 {
     public function index()
     {
-        $pengembalian = Pengembalian::with('pusat', 'tim')->get();
+        $pengembalian = Pengembalian::with([
+            'peminjaman.datapusat',
+            'peminjaman.tim'
+        ])->get();
+
         return response()->json([
             'success' => true,
             'message' => 'List of Pengembalian',
@@ -74,7 +78,11 @@ class PengembalianApiController extends Controller
 
     public function show($id)
     {
-        $pengembalian = Pengembalian::with('pusat', 'tim')->find($id);
+        $pengembalian = Pengembalian::with([
+            'peminjaman.datapusat',
+            'peminjaman.tim'
+        ])->find($id);
+
         if (!$pengembalian) {
             return response()->json([
                 'success' => false,
