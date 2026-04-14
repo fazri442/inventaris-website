@@ -85,17 +85,14 @@ class PeminjamController extends Controller
     {
         DB::beginTransaction();
         try {
-            // 🔍 Ambil tool
             $tool = Datapusat::findOrFail($request->id_tool);
 
-            // ❗ Validasi stok
             if ($tool->stok < $request->jumlah) {
-                return response()->json([
-                    'message' => 'Stok tidak mencukupi'
-                ], 400);
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Stok tidak mencukupi');
             }
 
-            // 📝 Simpan peminjaman
             $peminjaman = Peminjaman::create([
                 'kode_pinjam' => 'PJM-' . time(),
                 'id_tim' => $request->id_tim,
@@ -106,25 +103,22 @@ class PeminjamController extends Controller
                 'status' => 'dipinjam',
             ]);
 
-            // ➖ Kurangi stok
             $tool->decrement('stok', $request->jumlah);
 
             DB::commit();
 
-            return response()->json([
-                'message' => 'Peminjaman berhasil',
-                'data' => $peminjaman
-            ]);
+            return redirect()->route('peminjaman.index')
+                ->with('success', 'Peminjaman berhasil ditambahkan');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Terjadi kesalahan',
-                'error' => $e->getMessage()
-            ], 500);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
         }
-        return view('peminjam.index', compact('peminjaman', 'datapusat', 'tim'));
     }
+
 
     /**
      * Display the specified resource.
