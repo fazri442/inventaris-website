@@ -1,237 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title>Mega Able bootstrap admin template by codedthemes </title>
-    <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 10]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-      <![endif]-->
-      <!-- Meta -->
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-      <meta name="description" content="Mega Able Bootstrap admin template made using Bootstrap 4 and it has huge amount of ready made feature, UI components, pages which completely fulfills any dashboard needs." />
-      <meta name="keywords" content="bootstrap, bootstrap admin template, admin theme, admin dashboard, dashboard template, admin template, responsive" />
-      <meta name="author" content="codedthemes" />
-      <!-- Favicon icon -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - InvenTool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-      <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
-      <!-- Google font-->     
-      <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
-      <!-- Required Fremwork -->
-      <link rel="stylesheet" type="text/css" href="{{ asset ('front/css/bootstrap/css/bootstrap.min.css') }}">
-      <!-- waves.css -->
-      <link rel="stylesheet" href="{{ asset ('front/pages/waves/css/waves.min.css') }}" type="text/css" media="all">
-      <!-- themify-icons line icon -->
-      <link rel="stylesheet" type="text/css" href="{{ asset ('front/icon/themify-icons/themify-icons.css') }}">
-      <!-- ico font -->
-      <link rel="stylesheet" type="text/css" href="{{ asset ('front/icon/icofont/css/icofont.css') }}">
-      <!-- Font Awesome -->
-      <link rel="stylesheet" type="text/css" href="{{ asset ('front/icon/font-awesome/css/font-awesome.min.css') }}">
-      <!-- Style.css -->
-      <link rel="stylesheet" type="text/css" href="{{ asset ('front/css/style.css') }}">
-  </head>
+    <style>
+        body { font-family: 'Roboto', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#E8F1F9] min-h-screen flex items-center justify-center p-6">
 
-  <body themebg-pattern="theme1">
-  <!-- Pre-loader start -->
-  <div class="theme-loader">
-      <div class="loader-track">
-          <div class="preloader-wrapper">
-              <div class="spinner-layer spinner-blue">
-                  <div class="circle-clipper left">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="gap-patch">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="circle-clipper right">
-                      <div class="circle"></div>
-                  </div>
-              </div>
-              <div class="spinner-layer spinner-red">
-                  <div class="circle-clipper left">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="gap-patch">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="circle-clipper right">
-                      <div class="circle"></div>
-                  </div>
-              </div>
-            
-              <div class="spinner-layer spinner-yellow">
-                  <div class="circle-clipper left">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="gap-patch">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="circle-clipper right">
-                      <div class="circle"></div>
-                  </div>
-              </div>
-            
-              <div class="spinner-layer spinner-green">
-                  <div class="circle-clipper left">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="gap-patch">
-                      <div class="circle"></div>
-                  </div>
-                  <div class="circle-clipper right">
-                      <div class="circle"></div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-  <!-- Pre-loader end -->
-  <section class="login-block">
-        <!-- Container-fluid starts -->
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-12">
-                    <form method="POST" action="{{ route('register') }}" class="md-float-material form-material">
-                        @csrf
-                        {{-- <div class="text-center">
-                            <img src="assets/images/logo.png" alt="logo.png">
-                        </div> --}}
-                        <div class="auth-box card">
-                            <div class="card-block">
-                                <div class="row m-b-20">
-                                    <div class="col-md-12">
-                                        <h3 class="text-center txt-primary">Sign up</h3>
-                                    </div>
-                                </div>
-                                <div class="form-group form-primary">
-                                    <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name">
-                                    <span class="form-bar"></span>
-                                    <label class="float-label">Choose Username</label>
-                                    @error('name')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                                <div class="form-group form-primary">
-                                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-                                    <span class="form-bar"></span>
-                                    <label class="float-label">Your Email Address</label>
-                                    @error('email')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="form-group form-primary">
-                                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-                                            <span class="form-bar"></span>
-                                            <label class="float-label">Password</label>
-                                            @error('password')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group form-primary">
-                                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                                            <span class="form-bar"></span>
-                                            <label class="float-label">Confirm Password</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row m-t-30">
-                                    <div class="col-md-12">
-                                        <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">{{ __('Register') }}</button>
-                                    </div>
-                                </div>
-                                <hr/>
-                                <div class="row">
-                                    <div class="col-md-10">
-                                        <p class="text-inverse text-left m-b-0">Thank you.</p>
-                                        <p class="text-inverse text-left"><a href="index.html"><b>Back to website</b></a></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <!-- end of col-sm-12 -->
-            </div>
-            <!-- end of row -->
+    <div class="bg-white rounded-[50px] shadow-sm w-full max-w-[500px] p-10 md:p-12 text-center">
+        
+        <div class="inline-flex items-center justify-center p-3 border border-[#F1F5F9] rounded-[15px] mb-5">
+            <i data-lucide="user-plus" class="w-6 h-6 text-[#1A1C1E]"></i>
         </div>
-        <!-- end of container-fluid -->
-    </section>
-    <!-- Warning Section Starts -->
-    <!-- Older IE warning message -->
-    <!--[if lt IE 10]>
-<div class="ie-warning">
-    <h1>Warning!!</h1>
-    <p>You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers to access this website.</p>
-    <div class="iew-container">
-        <ul class="iew-download">
-            <li>
-                <a href="http://www.google.com/chrome/">
-                    <img src="assets/images/browser/chrome.png" alt="Chrome">
-                    <div>Chrome</div>
-                </a>
-            </li>
-            <li>
-                <a href="https://www.mozilla.org/en-US/firefox/new/">
-                    <img src="assets/images/browser/firefox.png" alt="Firefox">
-                    <div>Firefox</div>
-                </a>
-            </li>
-            <li>
-                <a href="http://www.opera.com">
-                    <img src="assets/images/browser/opera.png" alt="Opera">
-                    <div>Opera</div>
-                </a>
-            </li>
-            <li>
-                <a href="https://www.apple.com/safari/">
-                    <img src="assets/images/browser/safari.png" alt="Safari">
-                    <div>Safari</div>
-                </a>
-            </li>
-            <li>
-                <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
-                    <img src="assets/images/browser/ie.png" alt="">
-                    <div>IE (9 & above)</div>
-                </a>
-            </li>
-        </ul>
-    </div>
-    <p>Sorry for the inconvenience!</p>
-</div>
-<![endif]-->
-<!-- Warning Section Ends -->
-<!-- Required Jquery -->
-    <script type="text/javascript" src="{{ asset ('front/js/jquery/jquery.min.js') }}"></script>     
-    <script type="text/javascript" src="{{ asset ('front/js/jquery-ui/jquery-ui.min.js') }}"></script>     
-    <script type="text/javascript" src="{{ asset ('front/js/popper.js/popper.min.js') }}"></script>     
-    <script type="text/javascript" src="{{ asset ('front/js/bootstrap/js/bootstrap.min.js') }}"></script>
-<!-- waves js -->
-<script src="{{ asset ('front/pages/waves/js/waves.min.js') }}"></script>
-<!-- jquery slimscroll js -->
-<script type="text/javascript" src="{{ asset ('front/js/jquery-slimscroll/jquery.slimscroll.js') }}"></script>
-<!-- modernizr js -->
-    <script type="text/javascript" src="{{ asset ('front/js/SmoothScroll.js') }}"></script>     
-    <script src="{{ asset ('front/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
-<!-- i18next.min.js -->
-<script type="text/javascript" src="bower_components/i18next/js/i18next.min.js"></script>
-<script type="text/javascript" src="bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js"></script>
-<script type="text/javascript" src="bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js"></script>
-<script type="text/javascript" src="bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
-<script type="text/javascript" src="{{ asset ('front/js/common-pages.js') }}"></script>
-</body>
 
+        <h2 class="text-[32px] font-bold text-[#1A1C1E] mb-10">Daftar</h2>
+
+        <form method="POST" action="{{ route('register') }}" class="space-y-5">
+            @csrf
+            
+            <div class="relative">
+                <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+                    <i data-lucide="user" class="w-5 h-5 text-[#94A3B8]"></i>
+                </div>
+                <input type="text" name="name" 
+                    class="w-full bg-[#F8FAFC] text-[#1A1C1E] text-[15px] rounded-[15px] py-5 pl-14 pr-5 focus:outline-none placeholder-[#94A3B8] @error('name') border-red-500 @enderror" 
+                    placeholder="Nama Lengkap" value="{{ old('name') }}" required>
+                @error('name')
+                    <p class="text-red-500 text-xs mt-1 text-left ml-2">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="relative">
+                <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+                    <i data-lucide="mail" class="w-5 h-5 text-[#94A3B8]"></i>
+                </div>
+                <input type="email" name="email" 
+                    class="w-full bg-[#F8FAFC] text-[#1A1C1E] text-[15px] rounded-[15px] py-5 pl-14 pr-5 focus:outline-none placeholder-[#94A3B8] @error('email') border-red-500 @enderror" 
+                    placeholder="Email" value="{{ old('email') }}" required>
+                @error('email')
+                    <p class="text-red-500 text-xs mt-1 text-left ml-2">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="relative">
+                <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+                    <i data-lucide="lock" class="w-5 h-5 text-[#94A3B8]"></i>
+                </div>
+                <input type="password" name="password" 
+                    class="w-full bg-[#F8FAFC] text-[#1A1C1E] text-[15px] rounded-[15px] py-5 pl-14 pr-5 focus:outline-none placeholder-[#94A3B8] @error('password') border-red-500 @enderror" 
+                    placeholder="Password" required>
+                @error('password')
+                    <p class="text-red-500 text-xs mt-1 text-left ml-2">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <button type="submit" 
+                class="w-full bg-[#1A1A1C] hover:bg-black text-white font-bold py-5 rounded-[15px] transition-all duration-300 shadow-lg shadow-black/5 mt-4">
+                Daftar Sekarang
+            </button>
+        </form>
+
+        <div class="flex items-center my-8">
+            <div class="flex-grow border-t border-[#E2E8F0]"></div>
+            <span class="mx-4 text-[11px] text-[#CBD5E1] uppercase tracking-widest font-medium">Atau Daftar Dengan</span>
+            <div class="flex-grow border-t border-[#E2E8F0]"></div>
+        </div>
+
+        <a href="#" 
+            class="w-full flex items-center justify-center gap-3 bg-white border border-[#F1F5F9] rounded-[15px] py-4 text-[#1A1C1E] font-semibold hover:bg-gray-50 transition-all">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png" 
+                class="w-5 h-5" alt="Google">
+            <span>Daftar dengan Google</span>
+        </a>
+
+        <p class="mt-10 text-sm text-[#64748B]">
+            Sudah punya akun? 
+            <a href="{{ route('login') }}" class="text-[#1A1C1E] font-bold hover:underline">Masuk di sini</a>
+        </p>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
 </html>
