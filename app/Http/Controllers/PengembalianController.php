@@ -23,7 +23,7 @@ class PengembalianController extends Controller
         $tanggalAkhir = $request->input('tanggal_kembali');
 
         // 🔥 Ambil data peminjaman yang sudah dikembalikan
-        $query = Peminjaman::with(['tim', 'tool'])
+        $query = Peminjaman::with(['tim', 'datapusat'])
                     ->where('status', 'dikembalikan');
 
         if ($tanggalAwal && $tanggalAkhir) {
@@ -41,7 +41,7 @@ class PengembalianController extends Controller
         // 🔥 Data pengembalian (relasi ke peminjaman)
         $pengembalian = Pengembalian::with([
             'peminjaman.tim',
-            'peminjaman.tool'
+            'peminjaman.datapusat'
         ])->get();
 
         return view('pengembalian.index', compact('kembali', 'pengembalian'));

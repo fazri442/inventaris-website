@@ -44,8 +44,8 @@
                     @forelse ($pengembalian as $data)
                     <tr class="group transition-colors hover:bg-slate-50/50">
                         <td class="px-6 py-4 text-sm text-slate-400">{{ $no++ }}</td>
-                        <td class="px-6 py-4 text-sm font-bold text-slate-900">{{ $data->pusat->nama_tool }}</td>
-                        <td class="px-6 py-4 text-sm text-slate-600">{{ $data->nama_peminjam }}</td>
+                        <td class="px-6 py-4 text-sm font-bold text-slate-900">{{ $data->peminjaman->datapusat->nama_tool }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">{{ $data->peminjaman->tim->nama_anggota_tim ?? '-' }}</td>
                         <td class="px-6 py-4 text-sm text-slate-500">
                             {{ \Carbon\Carbon::parse($data->tanggal_kembali)->format('d M Y') }}
                         </td>
