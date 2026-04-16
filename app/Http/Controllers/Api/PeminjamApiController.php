@@ -90,37 +90,72 @@ class PeminjamApiController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $peminjam = Peminjaman::find($id);
-        
-        if (!$peminjam) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Peminjam not found',
-            ], 404);
+{
+    $peminjam = Peminjaman::find($id);
+    
+    if (!$peminjam) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Peminjam not found',
+        ], 404);
+    }
+
+    $request->validate([
+        'tanggal_pinjam' => 'sometimes|date',
+        'tanggal_kembali' => 'sometimes|date',
+        'id_tim' => 'sometimes|exists:tims,id',
+        'id_tool' => 'sometimes|exists:datapusats,id',
+        'status' => 'sometimes|string',
+        'jumlah' => 'sometimes|integer|min:1',
+    ]);
+
+    DB::beginTransaction();
+    try {
+        // LOGIKA PENGEMBALIAN BARANG (Jika status berubah jadi 'Kembali')
+        if ($request->status == 'Kembali' && $peminjam->status != 'Kembali') {
+            $pusat = Datapusat::find($peminjam->id_tool);
+            if ($pusat) {
+                $pusat->increment('stok', $peminjam->jumlah);
+            }
+        } 
+        // LOGIKA UPDATE JUMLAH/BARANG (Jika sedang edit data, bukan sekedar balikin)
+        else if ($request->has('jumlah') || $request->has('id_tool')) {
+            $oldTool = Datapusat::find($peminjam->id_tool);
+            $newToolId = $request->id_tool ?? $peminjam->id_tool;
+            $newTool = Datapusat::find($newToolId);
+            $newJumlah = $request->jumlah ?? $peminjam->jumlah;
+
+            // Kembalikan stok lama
+            if ($oldTool) {
+                $oldTool->increment('stok', $peminjam->jumlah);
+            }
+
+            // Kurangi stok baru (setelah dipastikan cukup)
+            if ($newTool->stok < $newJumlah) {
+                throw new \Exception("Stok barang baru tidak mencukupi");
+            }
+            $newTool->decrement('stok', $newJumlah);
         }
 
-        $request->validate([
-            'tanggal_pinjam' => 'sometimes|date',
-            'tanggal_kembali' => 'sometimes|date|after_or_equal:tanggal_pinjam',
-            'id_tim' => 'sometimes|exists:tims,id',
-            'status' => 'sometimes|string',
-        ]);
-
-        $data = Peminjaman::find($id);
-        $pusat = Datapusat::find($request->id_tool);
-        $pusat->stok += $data->jumlah;
-        $pusat->stok -= $request->jumlah;
-        $pusat->save();
-
+        // Update data di database
         $peminjam->update($request->all());
+        
+        DB::commit();
 
         return response()->json([
             'success' => true,
             'message' => 'Peminjam updated successfully',
             'data' => $peminjam,
         ], 200);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage(),
+        ], 500);
     }
+}
 
     public function destroy($id)
     {
