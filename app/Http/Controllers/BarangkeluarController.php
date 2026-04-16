@@ -174,9 +174,6 @@ class BarangkeluarController extends Controller
     public function destroy($id)
     {
         $keluar = Barangkeluar::findorfail($id);
-        $pusat = Datapusat::find($keluar->id_barang);
-        $pusat->stok += $keluar->jumlah;
-        $pusat->save();
         $keluar->delete();
         return redirect()->route('barangkeluar.index')->with('success', 'Data Berhasil Dihapus');
     }
