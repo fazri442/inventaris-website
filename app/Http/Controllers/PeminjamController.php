@@ -221,6 +221,6 @@ class PeminjamController extends Controller
             }
         }
         $peminjaman->delete();
-        return redirect()->route('peminjam.index')->with('success', 'Data Berhasil Dihapus');
+        return redirect()->route('peminjaman.index')->with('success', 'Data Berhasil Dihapus');
     }
 }
