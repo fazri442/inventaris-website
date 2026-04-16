@@ -58,7 +58,7 @@
                         <td class="px-6 py-4">
                             <span class="px-3 py-1 bg-amber-50 text-amber-600 rounded-lg text-xs font-semibold">
                                 <i class="fa-solid fa-truck-fast mr-1 text-[10px]"></i>
-                                {{ $data->nama_tim }}
+                                {{ $data->tim->nama_anggota_tim }}
                             </span>
                         </td>
                         <td class="px-6 py-4">

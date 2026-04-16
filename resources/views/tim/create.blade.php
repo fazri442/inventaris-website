@@ -69,14 +69,14 @@
                     </div>
 
                     <div class="space-y-2">
-                        <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Kontak / WhatsApp</label>
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Nomor Kontak / Email</label>
                         <div class="relative group">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-500 transition-colors">
                                 <i class="fa-solid fa-phone text-sm"></i>
                             </div>
                             <input type="text" name="kontak_tim" value="{{ old('kontak_tim') }}" 
                                 class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-100 text-slate-900 text-sm rounded-2xl focus:ring-4 focus:ring-blue-50 focus:border-blue-400 focus:bg-white transition-all outline-none" 
-                                placeholder="0812xxxxxxxx">
+                                placeholder="0812xxxxxxxx / email@company.com">
                         </div>
                     </div>
                 </div>

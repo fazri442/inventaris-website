@@ -31,44 +31,60 @@
                 <tbody class="divide-y divide-slate-50">
                     @forelse($datapusat as $item)
                     <tr class="hover:bg-slate-50/50 transition-colors group">
+                        {{-- KOLOM 1: INFO TOOL (FOTO + NAMA) --}}
                         <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0">
-                                    @if($item->foto)
-                                        <img src="{{ asset('storage/' . $item->foto) }}" class="w-full h-full object-cover">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-200/50">
+                                    @if($item->foto && file_exists(public_path('images/dp_foto/' . $item->foto)))
+                                        <img src="{{ asset('images/dp_foto/' . $item->foto) }}" class="w-full h-full object-cover">
                                     @else
-                                        <div class="w-full h-full flex items-center justify-center text-slate-400 text-xl">
-                                            <i class="fa-solid fa-toolbox"></i>
+                                        <div class="w-full h-full flex items-center justify-center text-slate-300">
+                                            <i class="fa-solid fa-toolbox text-lg"></i>
                                         </div>
                                     @endif
                                 </div>
                                 <div>
-                                    <p class="text-sm font-bold text-slate-900">{{ $item->nama_tool }}</p>
-                                    <p class="text-[11px] font-mono text-slate-400">{{ $item->kode_tool }}</p>
+                                    <h3 class="font-bold text-slate-900 leading-tight">{{ $item->nama_tool }}</h3>
+                                    <p class="text-[10px] font-mono text-slate-400 uppercase tracking-tighter">{{ $item->kode_tool }}</p>
                                 </div>
                             </div>
                         </td>
+
+                        {{-- KOLOM 2: LOKASI --}}
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-2 text-slate-600">
                                 <i class="fa-solid fa-location-dot text-[10px] text-blue-500"></i>
                                 <span class="text-sm font-medium">{{ $item->lokasi }}</span>
                             </div>
                         </td>
+
+                        {{-- KOLOM 3: STOK --}}
                         <td class="px-6 py-4 text-center">
                             <span class="px-3 py-1 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold">{{ $item->stok }} Unit</span>
                         </td>
+
+                        {{-- KOLOM 4: AKSI --}}
                         <td class="px-6 py-4">
                             <div class="flex items-center justify-center gap-2">
-                                <a href="{{ route('datapusat.edit', $item->id) }}" class="p-2 bg-slate-50 text-slate-400 rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all"><i class="fa-solid fa-pen text-sm"></i></a>
-                                <form action="{{ route('datapusat.destroy', $item->id) }}" method="POST">
+                                <a href="{{ route('datapusat.edit', $item->id) }}" class="p-2 text-slate-400 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all">
+                                    <i class="fa-solid fa-pen-to-square text-sm"></i>
+                                </a>
+                                <form action="{{ route('datapusat.destroy', $item->id) }}" method="POST" class="inline">
                                     @csrf @method('DELETE')
-                                    <button class="p-2 bg-slate-50 text-slate-400 rounded-xl hover:bg-rose-50 hover:text-rose-600 transition-all"><i class="fa-solid fa-trash text-sm"></i></button>
+                                    <button onclick="return confirm('Yakin ingin menghapus data ini?')" class="p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600 rounded-xl transition-all">
+                                        <i class="fa-solid fa-trash text-sm"></i>
+                                    </button>
                                 </form>
                             </div>
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="4" class="p-10 text-center text-slate-400">Data barang masih kosong.</td></tr>
+                    <tr>
+                        <td colspan="4" class="p-10 text-center text-slate-400 font-medium">
+                            <i class="fa-solid fa-box-open block text-3xl mb-3 opacity-20"></i>
+                            Data barang masih kosong.
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>

@@ -25,6 +25,7 @@ class HomeController extends Controller
     public function index()
 {
     $barang = \App\Models\Datapusat::latest()->take(5)->get();
+    $datapusat = \App\Models\Datapusat::all();
     $totalPeminjamanGlobal = \App\Models\Peminjaman::count();
     
     // Ambil semua tim dengan hitungan relasi
@@ -63,6 +64,6 @@ class HomeController extends Controller
     ->take(5)
     ->values(); // biar index rapi
 
-    return view('home', compact('barang', 'timStats'));
+    return view('home', compact('barang', 'timStats', 'datapusat'));
 }
 }

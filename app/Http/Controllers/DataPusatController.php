@@ -51,16 +51,16 @@ class DataPusatController extends Controller
      */
     public function store(Request $request)
     {
-        $notif = $request->validate([
+        $request->validate([
             'nama_tool' => 'required',
-            'foto' => 'required',
-            'stok' => 'required',
+            'foto'      => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'stok'      => 'required|integer',
             'deskripsi' => 'required',
-            'lokasi' => 'required'
-        ],
-        [
-            'nama_tool.required' => 'Nama Tool Belum diisi',
-            'foto.required' => 'Foto Belum Dipilih',
+            'lokasi'    => 'required'
+        ], [
+            'foto.image'    => 'File harus berupa gambar.',
+            'foto.mimes'    => 'Format yang diizinkan hanya jpeg, png, jpg, dan webp.',
+            'foto.max'      => 'Ukuran foto maksimal adalah 2MB.',
             'stok.required' => 'Stok Belum dimasukan',
             'deskripsi.required' => 'Deskripsi Belum dimasukan',
             'lokasi.required' => 'Lokasi Belum dimasukan',
@@ -74,8 +74,11 @@ class DataPusatController extends Controller
         $data->nama_tool = $request->nama_tool;
         if($request->hasFile('foto')){
             $img = $request->file('foto');
-            $name = rand(1000,9999).$img->getClientOriginalname();
-            $img->move('images/dp_foto', $name);
+            
+            // Gunakan time() agar nama file unik berdasarkan detik upload
+            $name = time() . '_' . $img->getClientOriginalName();
+            
+            $img->move(public_path('images/dp_foto'), $name);
             $data->foto = $name;
         }
         $data->stok = $request->stok;
@@ -143,15 +146,12 @@ class DataPusatController extends Controller
 
         // Logika Foto: Hanya jalankan jika user upload file baru
         if($request->hasFile('foto')){
-            // 1. Hapus foto lama dari folder (pake method yang sudah kamu buat)
-            $data->deleteImage(); 
-            
-            // 2. Upload foto baru
             $img = $request->file('foto');
-            $name = rand(1000,9999) . $img->getClientOriginalName();
-            $img->move('images/dp_foto', $name);
+            $name = rand(1000,9999).$img->getClientOriginalName();
             
-            // 3. Masukkan nama file baru ke database
+            // Gunakan public_path agar lokasi tujuan jelas ke folder public/images/dp_foto
+            $img->move(public_path('images/dp_foto'), $name);
+            
             $data->foto = $name;
         }
 

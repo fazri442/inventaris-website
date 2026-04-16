@@ -7,6 +7,12 @@
             <h1 class="text-2xl font-bold text-slate-900">Peminjaman Tool</h1>
             <p class="text-sm text-slate-500">Kelola peminjaman barang dan pantau tenggat waktu pengembalian.</p>
         </div>
+        @if (session('success'))
+            <div class="bg-emerald-50 border border-emerald-100 text-emerald-600 px-6 py-4 rounded-2xl flex items-center gap-3 animate-fade-in">
+                <i class="fa-solid fa-circle-check text-xl"></i>
+                <p class="font-medium">{{ session('success') }}</p>
+            </div>
+        @endif
         <div class="flex items-center gap-3">
             <a href="{{ route('peminjaman.create') }}" 
                class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-2xl font-semibold hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all">

@@ -12,6 +12,12 @@
                 <p class="text-xs text-slate-500 uppercase tracking-widest font-semibold">Distribusi & Logistik</p>
             </div>
         </div>
+        @if (session('error'))
+            <div class="bg-rose-50 border border-rose-100 text-rose-600 px-6 py-4 rounded-2xl flex items-center gap-3 animate-fade-in">
+                <i class="fa-solid fa-circle-exclamation text-xl"></i>
+                <p class="font-medium">{{ session('error') }}</p>
+            </div>
+        @endif
         <a href="{{ route('barangkeluar.index') }}" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-sm font-bold transition-all flex items-center gap-2">
             <i class="fa-solid fa-arrow-rotate-left"></i> Kembali
         </a>

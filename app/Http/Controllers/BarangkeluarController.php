@@ -86,6 +86,11 @@ class BarangkeluarController extends Controller
         $keluar->kode_tool = $kodetool;
 
         $pusat = Datapusat::find($request->id_tool);
+        if ($pusat->stok < $request->jumlah) {
+               return redirect()->back()
+                ->withInput()
+                ->with('error', 'Stok Dari Gudang Berisi: ' .$pusat->stok);
+        }
         $pusat->stok -= $request->jumlah;
         $pusat->save();
 
@@ -121,7 +126,8 @@ class BarangkeluarController extends Controller
     {
         $barangkeluar = Barangkeluar::findorfail($id);
         $pusat = Datapusat::all();
-        return view('keluar.edit', compact('barangkeluar', 'pusat'));
+        $tim = Tim::all();
+        return view('keluar.edit', compact('barangkeluar', 'pusat', 'tim'));
     }
 
     /**
@@ -154,6 +160,12 @@ class BarangkeluarController extends Controller
         ]);
         $barangkeluar = BarangKeluar::findOrFail($id);
         $datapusat = DataPusat::findOrFail($barangkeluar->id_tool);
+        $pusat = Datapusat::find($request->id_tool);
+        if ($pusat->stok < $request->jumlah) {
+               return redirect()->back()
+                ->withInput()
+                ->with('error', 'Stok Dari Gudang Berisi: ' .$pusat->stok);
+        }
             $datapusat->stok +=$barangkeluar->jumlah;
             $datapusat->stok -= $request->jumlah;
             // $datapusat->stok = $datapusat->stok -$barangkeluar->jumlah + $request->jumlah;
