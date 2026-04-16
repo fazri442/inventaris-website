@@ -67,18 +67,18 @@
             </button>
         </form>
 
-        <div class="flex items-center my-8">
+        {{-- <div class="flex items-center my-8">
             <div class="flex-grow border-t border-[#E2E8F0]"></div>
             <span class="mx-4 text-[11px] text-[#CBD5E1] uppercase tracking-widest font-medium">Atau Daftar Dengan</span>
             <div class="flex-grow border-t border-[#E2E8F0]"></div>
-        </div>
+        </div> --}}
 
-        <a href="#" 
+        {{-- <a href="#" 
             class="w-full flex items-center justify-center gap-3 bg-white border border-[#F1F5F9] rounded-[15px] py-4 text-[#1A1C1E] font-semibold hover:bg-gray-50 transition-all">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png" 
                 class="w-5 h-5" alt="Google">
             <span>Daftar dengan Google</span>
-        </a>
+        </a> --}}
 
         <p class="mt-10 text-sm text-[#64748B]">
             Sudah punya akun? 
